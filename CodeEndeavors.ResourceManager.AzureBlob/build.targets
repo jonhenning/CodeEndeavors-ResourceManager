@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- PLEASE NOTE THAT CHANGES TO THIS AzureBlob WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT! -->
+  <PropertyGroup>
+    <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+    <RedistDir>$(RootDir)\redist</RedistDir>
+    <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+    <CommonLibDir>$(RootDir)\lib</CommonLibDir>
+    <CommonBinDir>$(CommonLibDir)</CommonBinDir>
+    <MSBuildTasksDir>$(CommonBinDir)\MSBuildTasks</MSBuildTasksDir>
+      <InternalizedDlls>CodeEndeavors.ResourceManager.Shared.dll</InternalizedDlls>
+      <ILMergeTargetPlatform>/targetplatform:v4,"%ProgramFiles(x86)%\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client"</ILMergeTargetPlatform>
+    <DeployDir></DeployDir>
+  </PropertyGroup>
+
+  <!-- Import to use Common Targets\Tasks -->
+  <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
+  <Target Name="AfterBuild">
+    <CallTarget Targets="CreateSetupPackage" />
+    <CallTarget Targets="Deploy" />
+  </Target>
+
+  <Target Name="CreateSetupPackage" >
+    <Copy SourceFiles="
+          $(TargetDir)\CodeEndeavors.ResourceManager.AzureBlob.dll;
+          $(TargetDir)\CodeEndeavors.ResourceManager.AzureBlob.pdb;
+          $(TargetDir)\Microsoft.WindowsAzure.ServiceRuntime.dll;
+          $(TargetDir)\Microsoft.WindowsAzure.StorageClient.dll;
+          $(TargetDir)\Microsoft.WindowsAzure.Diagnostics.dll;
+          $(TargetDir)\Microsoft.ServiceBus.dll;
+          $(TargetDir)\Microsoft.ApplicationServer.Caching.Core.dll;
+          $(TargetDir)\Microsoft.ApplicationServer.Caching.Client.dll;          
+          " DestinationFolder="$(RedistDir)" />
+    <CreateItem Include="
+                $(RedistDir)\CodeEndeavors.ResourceManager.AzureBlob.dll;
+                $(RedistDir)\CodeEndeavors.ResourceManager.AzureBlob.pdb;
+                $(RedistDir)\Microsoft.WindowsAzure.ServiceRuntime.dll;
+                $(RedistDir)\Microsoft.WindowsAzure.StorageClient.dll;
+                $(RedistDir)\Microsoft.WindowsAzure.Diagnostics.dll;
+                $(RedistDir)\Microsoft.ServiceBus.dll;
+                $(RedistDir)\Microsoft.ApplicationServer.Caching.Core.dll;
+                $(RedistDir)\Microsoft.ApplicationServer.Caching.Client.dll;          
+                ">
+      <Output TaskParameter="Include" ItemName="RedistDlls" />
+    </CreateItem>
+
+      <Zip Files="@(RedistDlls)" WorkingDirectory="$(RedistDir)\" ZipFileName="$(RedistDir)\CodeEndeavors.ResourceManager.AzureBlob.zip" />
+  </Target>
+
+  <Target Name="Deploy" Condition="Exists('$(DeployDir)')">
+    <Copy SourceFiles="$(RedistDir)\CodeEndeavors.ResourceManager.AzureBlob.zip" DestinationFolder="$(DeployDir)" />
+    <Unzip TargetDirectory="$(DeployDir)\CodeEndeavors.ResourceManager.AzureBlob" ZipFileName="$(RedistDir)\CodeEndeavors.ResourceManager.AzureBlob.zip" />
+  </Target>
+
+
+</Project>
