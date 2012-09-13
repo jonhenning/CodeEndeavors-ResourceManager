@@ -1,0 +1,9 @@
+# git ignore file
+*.pdb
+*.user
+*.cache
+*.zip
+*.suo
+redist/
+bin/
+obj/

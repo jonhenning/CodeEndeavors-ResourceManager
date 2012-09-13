@@ -126,7 +126,7 @@ namespace CodeEndeavors.ResourceManager
                 id = ((dynamic)data).Id; //todo: better trapping of errors if data doesn't support?!
             }
             catch { }
-            var resource = GetResourceById<T>(id);
+            var resource = id != null ? GetResourceById<T>(id) : null;
             if (resource == null)
                 resource = new DomainObjects.Resource<T>(type, key, null, data);
             else

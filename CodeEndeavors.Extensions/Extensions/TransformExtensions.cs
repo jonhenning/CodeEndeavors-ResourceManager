@@ -150,5 +150,14 @@ namespace CodeEndeavors.Extensions
             return sOutput.ToString();
         }
 
+        public static int? ToInt(this string s)
+        {
+            int? i = null;
+            int i2;
+            if (int.TryParse(s, out i2))
+                i = i2;
+            return i;
+        }
+
     }
 }

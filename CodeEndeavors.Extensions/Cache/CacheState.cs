@@ -151,6 +151,22 @@ namespace CodeEndeavors.Cache
         #region PullCache Methods
         public delegate T PullCacheData<T>();
 
+        public static T PullRequestCache<T>(string key, PullCacheData<T> pullFunc)
+        {
+            //assuming already thread safe.
+            T ret;
+            if (System.Web.HttpContext.Current != null)
+            {
+                if (System.Web.HttpContext.Current.Items.Contains(key))
+                    return System.Web.HttpContext.Current.Items.GetSetting<T>(key, default(T));
+                ret = pullFunc();
+                System.Web.HttpContext.Current.Items[key] = ret;
+            }
+            else
+                ret = pullFunc();
+            return ret;
+        }
+
         public static T PullCache<T>(string key, bool useCache, PullCacheData<T> pullFunc, CacheItemPriority priority, TimeSpan cacheTime)
         {
             return PullCache<T>(key, useCache, pullFunc, priority, cacheTime, null);

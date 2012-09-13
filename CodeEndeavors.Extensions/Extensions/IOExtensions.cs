@@ -11,13 +11,13 @@ namespace CodeEndeavors.Extensions
         {
             T o = default(T);
             if (cacheFile)
-                o = HttpContext.Current.Cache.GetSetting<T>(fileName, default(T));
+                o = Cache.CacheState.Cache.GetSetting<T>(fileName, default(T));
             if (o == null)
             {
                 var json = fileName.GetFileContents();
                 o = json.ToObject<T>();
                 if (cacheFile)
-                    HttpContext.Current.Cache.Add(fileName, o, new CacheDependency(fileName), System.Web.Caching.Cache.NoAbsoluteExpiration, System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
+                    Cache.CacheState.Cache.Add(fileName, o, new CacheDependency(fileName), System.Web.Caching.Cache.NoAbsoluteExpiration, System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
             }
             return o;
         }
@@ -27,11 +27,11 @@ namespace CodeEndeavors.Extensions
             if (cacheFile == false)
                 return GetFileContents(fileName);
 
-            var contents = HttpContext.Current.Cache.GetSetting<string>(fileName, "");
+            var contents = Cache.CacheState.Cache.GetSetting<string>(fileName, "");
             if (String.IsNullOrEmpty(contents))
             {
                 contents = GetFileContents(fileName);
-                HttpContext.Current.Cache.Add(fileName, contents, new CacheDependency(fileName), System.Web.Caching.Cache.NoAbsoluteExpiration, System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
+                Cache.CacheState.Cache.Add(fileName, contents, new CacheDependency(fileName), System.Web.Caching.Cache.NoAbsoluteExpiration, System.Web.Caching.Cache.NoSlidingExpiration, CacheItemPriority.Normal, null);
             }
             return contents;
         }

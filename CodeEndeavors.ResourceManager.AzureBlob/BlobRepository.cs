@@ -41,7 +41,8 @@ namespace CodeEndeavors.ResourceManager.AzureBlob
             if (string.IsNullOrEmpty(_azureBlobStorage))
                 throw new Exception("azureBlobStorage key not found in connection");
 
-            _storageAccount = CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue(_azureBlobStorage));
+            //_storageAccount = CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue(_azureBlobStorage));
+            _storageAccount = CloudStorageAccount.Parse(_azureBlobStorage);
             _blobClient = _storageAccount.CreateCloudBlobClient();
             _blobContainer = _blobClient.GetContainerReference(_connection.GetSetting("azureBlobContainer", "codeendeavors-resourcerepository"));
             _blobContainer.CreateIfNotExist();
@@ -58,7 +59,7 @@ namespace CodeEndeavors.ResourceManager.AzureBlob
         public DomainObjects.Resource<T> GetResource<T>(string id)
         {
             var dict = AllResourceDict<T>();
-            if (dict.ContainsKey(id))
+            if (id != null && dict.ContainsKey(id))
                 return dict[id];
             return null;
             //return AllResources<T>().SingleOrDefault(d => d.Id == Id);
@@ -104,7 +105,7 @@ namespace CodeEndeavors.ResourceManager.AzureBlob
                     }
                     return resource;
                 },
-                fileName);
+                CacheItemPriority.Normal, TimeSpan.FromMinutes(5));//fileName);
         }
 
         private ConcurrentDictionary<string, DomainObjects.Resource<T>> AllResourceDict<T>()
@@ -131,7 +132,7 @@ namespace CodeEndeavors.ResourceManager.AzureBlob
                     }
                     return new ConcurrentDictionary<string, DomainObjects.Resource<T>>(resource.ToDictionary(r => r.Id));
                 },
-                fileName);
+                CacheItemPriority.Normal, TimeSpan.FromMinutes(5));//fileName);
         }
 
         //private ConcurrentDictionary<string, DomainObjects.Resource<T>> AllResourceDict<T>()
