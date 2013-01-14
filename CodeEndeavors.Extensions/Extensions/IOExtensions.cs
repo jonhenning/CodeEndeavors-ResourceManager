@@ -49,24 +49,28 @@ namespace CodeEndeavors.Extensions
         //todo:  buffer???
         public static string GetFileBase64(this string fileName)
         {
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-            byte[] bytes = new byte[fs.Length];
-            fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
-            return Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                byte[] bytes = new byte[fs.Length];
+                fs.Read(bytes, 0, Convert.ToInt32(fs.Length));
+                return Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
+            }
         }
 
         public static void Base64ToFile(this string base64, string fileName)
         {
             byte[] filebytes = Convert.FromBase64String(base64);
-            var fs = new FileStream(fileName, FileMode.CreateNew, FileAccess.Write, FileShare.None);
-            fs.Write(filebytes, 0, filebytes.Length);
-            fs.Close();
+            using (var fs = new FileStream(fileName, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            {
+                fs.Write(filebytes, 0, filebytes.Length);
+                fs.Close();
+            }
         }
 
         public static Stream GetStream(this string path)
         {
             // read input etx
-            FileInfo file = new FileInfo(path);
+            var file = new FileInfo(path);
             var len = file.Length;
             int bytes;
             byte[] buffer = new byte[1024];
