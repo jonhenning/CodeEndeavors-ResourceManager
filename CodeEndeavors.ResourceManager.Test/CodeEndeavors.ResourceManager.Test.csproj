@@ -67,9 +67,9 @@
       <Project>{aef255a3-9cf0-42ef-96de-ddca673bf92e}</Project>
       <Name>CodeEndeavors.Extensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CodeEndeavors.ResourceManager.AzureBlob\CodeEndeavors.ResourceManager.AzureBlob.csproj">
-      <Project>{023ea066-20a9-4a84-adc8-745f29351904}</Project>
-      <Name>CodeEndeavors.ResourceManager.AzureBlob</Name>
+    <ProjectReference Include="..\CodeEndeavors.ResourceManager.File\CodeEndeavors.ResourceManager.File.csproj">
+      <Project>{77be6536-59b7-44b9-8257-33212500d01d}</Project>
+      <Name>CodeEndeavors.ResourceManager.File</Name>
     </ProjectReference>
     <ProjectReference Include="..\CodeEndeavors.ResourceManager.Shared\CodeEndeavors.ResourceManager.Shared.csproj">
       <Project>{581aee2e-7f0f-4296-ab8c-6d089f68e8b7}</Project>

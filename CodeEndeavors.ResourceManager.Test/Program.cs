@@ -16,7 +16,8 @@ namespace CodeEndeavors.ResourceManager.Test
             //{
 
             //var connection = "{ type:'AzureBlob', azureBlobStorage:'DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==' }";
-            var connection = "{ type:'AzureBlob', azureBlobStorage:'dev' }";
+            //var connection = "{ type:'AzureBlob', azureBlobStorage:'dev' }";
+            var connection = "{ type:'File', resourceDir:'~/App_Data/FileDb' }";
 
             using (var repo = new ResourceRepository(connection))
             {
