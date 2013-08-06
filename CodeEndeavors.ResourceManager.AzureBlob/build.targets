@@ -24,22 +24,14 @@
     <Copy SourceFiles="
           $(TargetDir)\CodeEndeavors.ResourceManager.AzureBlob.dll;
           $(TargetDir)\CodeEndeavors.ResourceManager.AzureBlob.pdb;
-          $(TargetDir)\Microsoft.WindowsAzure.ServiceRuntime.dll;
           $(TargetDir)\Microsoft.WindowsAzure.StorageClient.dll;
-          $(TargetDir)\Microsoft.WindowsAzure.Diagnostics.dll;
           $(TargetDir)\Microsoft.ServiceBus.dll;
-          $(TargetDir)\Microsoft.ApplicationServer.Caching.Core.dll;
-          $(TargetDir)\Microsoft.ApplicationServer.Caching.Client.dll;          
           " DestinationFolder="$(RedistDir)" />
     <CreateItem Include="
                 $(RedistDir)\CodeEndeavors.ResourceManager.AzureBlob.dll;
                 $(RedistDir)\CodeEndeavors.ResourceManager.AzureBlob.pdb;
-                $(RedistDir)\Microsoft.WindowsAzure.ServiceRuntime.dll;
                 $(RedistDir)\Microsoft.WindowsAzure.StorageClient.dll;
-                $(RedistDir)\Microsoft.WindowsAzure.Diagnostics.dll;
                 $(RedistDir)\Microsoft.ServiceBus.dll;
-                $(RedistDir)\Microsoft.ApplicationServer.Caching.Core.dll;
-                $(RedistDir)\Microsoft.ApplicationServer.Caching.Client.dll;          
                 ">
       <Output TaskParameter="Include" ItemName="RedistDlls" />
     </CreateItem>
