@@ -52,7 +52,12 @@ namespace CodeEndeavors.Extensions
             return JsonConvert.DeserializeObject<T>(json, settings);
         }
 
-        public static string ToJson(this object obj, bool pretty = false, string ignoreType = null, bool preserveObjectReferences = false)
+        public static string ToJson(this object obj, bool pretty = false, string ignoreType = null)
+        {
+            return ToJson(obj, pretty, ignoreType, false);
+        }
+
+        public static string ToJson(this object obj, bool pretty, string ignoreType, bool preserveObjectReferences)
         {
             //return JsonSerializer.Serialize(obj);
             var format = pretty ? Formatting.Indented : Formatting.None;
