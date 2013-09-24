@@ -52,7 +52,7 @@ namespace CodeEndeavors.Extensions
             return JsonConvert.DeserializeObject<T>(json, settings);
         }
 
-        public static string ToJson(this object obj, bool pretty = false, string ignoreType = null)
+        public static string ToJson(this object obj, bool pretty = false, string ignoreType = null, bool preserveObjectReferences = false)
         {
             //return JsonSerializer.Serialize(obj);
             var format = pretty ? Formatting.Indented : Formatting.None;
@@ -60,6 +60,8 @@ namespace CodeEndeavors.Extensions
             settings.Converters.Add(new IsoDateTimeConverter() { DateTimeStyles = System.Globalization.DateTimeStyles.AdjustToUniversal });
             if (!string.IsNullOrEmpty(ignoreType))
                 settings.ContractResolver = new Serialization.SerializeIgnoreContractResolver(ignoreType);
+            if (preserveObjectReferences)
+                settings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
             return JsonConvert.SerializeObject(obj, format, settings);
         }
 
