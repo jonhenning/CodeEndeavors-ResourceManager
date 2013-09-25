@@ -4,7 +4,8 @@
 *.cache
 *.zip
 *.suo
-redist/
+redist/*.dll
+redist/*.pdb
 bin/
 obj/
 packages/

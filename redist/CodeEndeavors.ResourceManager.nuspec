@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>CodeEndeavors.ResourceManager</id>
+        <version>1.0.2</version>
+        <authors>Jon Henning</authors>
+        <owners>Code Endeavores Inc.</owners>
+        <projectUrl>http://www.codeendeavors.com</projectUrl>
+        <iconUrl>https://secure.gravatar.com/avatar/821c48cbda08c0ec4b23222a419905ac?s=140&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A simple repository abstraction</description>
+        <releaseNotes />
+        <dependencies>
+            <group targetFramework=".NETFramework4.0">
+                <dependency id="structuremap" version="2.6.4.1" />
+                <dependency id="CodeEndeavors.Extensions" version="1.0.2" />
+                <dependency id="Newtonsoft.Json" version="5.0.6" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="CodeEndeavors.ResourceManager.dll" target="lib\net40\CodeEndeavors.ResourceManager.dll" />
+        <file src="CodeEndeavors.ResourceManager.File.dll" target="lib\net40\CodeEndeavors.ResourceManager.File.dll" />
+    </files>
+</package>
