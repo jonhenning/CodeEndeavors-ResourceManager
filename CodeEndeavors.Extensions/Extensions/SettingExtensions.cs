@@ -46,8 +46,14 @@ namespace CodeEndeavors.Extensions
 
         public static Dictionary<TKey, TValue> Merge<TKey, TValue>(this Dictionary<TKey, TValue> source1, Dictionary<TKey, TValue> source2)
         {
+            return Merge(source1, source2, true);   //defaulting to true for backward compat
+        }
+
+        public static Dictionary<TKey, TValue> Merge<TKey, TValue>(this Dictionary<TKey, TValue> source1, Dictionary<TKey, TValue> source2, bool newDict)
+        {
             //todo: use linq with SelectMany?
-            var result = new Dictionary<TKey, TValue>();
+            Dictionary<TKey, TValue> result;
+            result = newDict ? new Dictionary<TKey, TValue>() : source1;
             foreach (var x in source1)
                 result[x.Key] = x.Value;
             foreach (var x in source2)
