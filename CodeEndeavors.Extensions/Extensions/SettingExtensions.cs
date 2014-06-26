@@ -54,8 +54,11 @@ namespace CodeEndeavors.Extensions
             //todo: use linq with SelectMany?
             Dictionary<TKey, TValue> result;
             result = newDict ? new Dictionary<TKey, TValue>() : source1;
-            foreach (var x in source1)
-                result[x.Key] = x.Value;
+            if (newDict)
+            {
+                foreach (var x in source1)
+                    result[x.Key] = x.Value;
+            }
             foreach (var x in source2)
                 result[x.Key] = x.Value;
             return result;

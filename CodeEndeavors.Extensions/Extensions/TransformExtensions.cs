@@ -133,7 +133,7 @@ namespace CodeEndeavors.Extensions
         {
             if (path1.EndsWith(delimiter) && path2.StartsWith(delimiter))
                 return path1.Substring(0, path1.Length - 1) + path2;
-            else if (!path1.EndsWith(delimiter) && !path2.StartsWith(delimiter))
+            else if (!path1.EndsWith(delimiter) && !path2.StartsWith(delimiter) && !string.IsNullOrEmpty(path1) && !string.IsNullOrEmpty(path2))
                 return path1 + delimiter + path2;
             return path1 + path2;
         }
