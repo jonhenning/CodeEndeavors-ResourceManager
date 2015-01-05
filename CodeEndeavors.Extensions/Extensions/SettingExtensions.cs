@@ -21,7 +21,11 @@ namespace CodeEndeavors.Extensions
         public static T GetSetting<T>(this System.Collections.IDictionary dictionary, string key, T defaultValue, bool addEntry = false)
         {
             if (dictionary.Contains(key))
+            {
+                if (dictionary[key] == null && !typeof(T).IsNullable())
+                    return defaultValue;
                 return dictionary[key].ToType<T>();
+            }
             if (addEntry)
                 dictionary[key] = defaultValue;
             return defaultValue;

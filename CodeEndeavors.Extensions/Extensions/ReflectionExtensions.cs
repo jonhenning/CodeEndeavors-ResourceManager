@@ -55,6 +55,10 @@ namespace CodeEndeavors.Extensions
             return type;
         }
 
+        public static bool IsNullable<T>(this T value)  //http://stackoverflow.com/questions/6026824/detecting-a-nullable-type-via-reflection
+        {
+            return Nullable.GetUnderlyingType(typeof(T)) != null;
+        }
     }
 
 }
