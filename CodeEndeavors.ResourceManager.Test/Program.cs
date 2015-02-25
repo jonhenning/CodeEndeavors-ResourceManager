@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using CodeEndeavors.Extensions;
+using System.Reflection;
 //using StructureMap;
 
 namespace CodeEndeavors.ResourceManager.Test
@@ -12,6 +13,8 @@ namespace CodeEndeavors.ResourceManager.Test
     {
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
             //using (var repo = new ResourceRepository("RavenDB", ResourceRepository.RepositoryType.RavenDb))
             //{
 
@@ -21,7 +24,6 @@ namespace CodeEndeavors.ResourceManager.Test
 
             using (var repo = new ResourceRepository(connection))
             {
-
                 var type = typeof(MyObj).ToString();
 
                 var resources = repo.GetResources<MyObj>(type);
@@ -30,7 +32,6 @@ namespace CodeEndeavors.ResourceManager.Test
                 var o = new MyObj() { Text = "foo" };
                 var userId = "1";
                 repo.DeleteAll<string>(type);
-
 
                 var resource = new DomainObjects.Resource<MyObj>()
                 {
@@ -69,5 +70,12 @@ namespace CodeEndeavors.ResourceManager.Test
         }
 
 
+        public static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var assemblyName = new AssemblyName(args.Name);
+            if (assemblyName.Name != args.Name)
+                return Assembly.LoadWithPartialName(assemblyName.Name);
+            return null;
+        }
     }
 }

@@ -37,22 +37,47 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.ServiceBus, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="CodeEndeavors.Extensions, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\nnr\videre\lib\CodeEndeavors.ResourceManager.AzureBlob\Microsoft.ServiceBus.dll</HintPath>
+      <HintPath>..\redist\CodeEndeavors.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="CodeEndeavors.ResourceManager, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\nnr\videre\lib\CodeEndeavors.ResourceManager.AzureBlob\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
+      <HintPath>..\redist\CodeEndeavors.ResourceManager.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="CodeEndeavors.ResourceManager.File, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\redist\CodeEndeavors.ResourceManager.File.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
+    <Reference Include="CodeEndeavors.ResourceManager.RavenDb">
+      <HintPath>..\redist\CodeEndeavors.ResourceManager.RavenDb.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap, Version=2.6.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -61,24 +86,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CodeEndeavors.Extensions\CodeEndeavors.Extensions.csproj">
-      <Project>{aef255a3-9cf0-42ef-96de-ddca673bf92e}</Project>
-      <Name>CodeEndeavors.Extensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CodeEndeavors.ResourceManager.File\CodeEndeavors.ResourceManager.File.csproj">
-      <Project>{77be6536-59b7-44b9-8257-33212500d01d}</Project>
-      <Name>CodeEndeavors.ResourceManager.File</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CodeEndeavors.ResourceManager.Shared\CodeEndeavors.ResourceManager.Shared.csproj">
-      <Project>{581aee2e-7f0f-4296-ab8c-6d089f68e8b7}</Project>
-      <Name>CodeEndeavors.ResourceManager.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CodeEndeavors.ResourceManager\CodeEndeavors.ResourceManager.csproj">
-      <Project>{9e774dc3-ca28-49d1-b2cb-bee671d2be49}</Project>
-      <Name>CodeEndeavors.ResourceManager</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
