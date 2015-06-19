@@ -7,6 +7,7 @@ using System.Web;
 //using CodeEndeavors.ResourceManager.DomainObjects;
 using System.Web.Caching;
 using CodeEndeavors.Extensions;
+using System.Runtime.Caching;
 
 namespace CodeEndeavors.Cache
 {
@@ -52,14 +53,14 @@ namespace CodeEndeavors.Cache
             return obj.ToType<T>();
         }
 
-        public static void SetState(string key, object value, TimeSpan duration, CacheItemPriority priority)
+        public static void SetState(string key, object value, TimeSpan duration, System.Web.Caching.CacheItemPriority priority)
         {
             SetState(key, value, duration, priority, null);
         }
 
         public static void SetState(string key, object value, CacheDependency dependency)
         {
-            SetState(key, value, System.Web.Caching.Cache.NoAbsoluteExpiration, CacheItemPriority.Normal, null, null, dependency);
+            SetState(key, value, System.Web.Caching.Cache.NoAbsoluteExpiration, System.Web.Caching.CacheItemPriority.Normal, null, null, dependency);
         }
 
         public static void SetState(string key, object value, TimeSpan duration, System.Web.Caching.CacheItemPriority priority, string dependencyKey)
@@ -81,7 +82,7 @@ namespace CodeEndeavors.Cache
             SetState(key, value, expiryTime, priority, null, null);
         }
 
-        public static void SetState(string key, object value, DateTime expiryTime, System.Web.Caching.CacheItemPriority priority = CacheItemPriority.Normal, string dependencyKey = null, string dependencyFileName = null, CacheDependency dependency = null)
+        public static void SetState(string key, object value, DateTime expiryTime, System.Web.Caching.CacheItemPriority priority = System.Web.Caching.CacheItemPriority.Normal, string dependencyKey = null, string dependencyFileName = null, CacheDependency dependency = null)
         {
             if (value != null)
             {
@@ -148,6 +149,75 @@ namespace CodeEndeavors.Cache
             RemoveCacheItem(key);
         }
 
+        private static ConcurrentDictionary<string, MemoryCache> _memoryCache = new ConcurrentDictionary<string, MemoryCache>();
+        public static MemoryCache GetMemoryCache(string cacheKey)
+        {
+            return _memoryCache.GetOrAdd(cacheKey, new MemoryCache(cacheKey));
+        }
+
+        public static void ExpireMemoryCache(string cacheKey, string key)
+        {
+            GetMemoryCache(cacheKey).Remove(key);
+        }
+
+        public static T GetMemoryCacheItem<T>(string cacheKey, string key, Func<T> fallbackFunction, CacheItemPolicy policy = null)
+        {
+            if (policy == null)
+                policy = new CacheItemPolicy() { Priority = System.Runtime.Caching.CacheItemPriority.Default, SlidingExpiration = TimeSpan.FromMinutes(60) };
+
+            var cache = GetMemoryCache(cacheKey);
+
+            var data = cache.Get(key);
+            if (data == null)
+            {
+                lock (cache)
+                {
+                    data = cache.Get(key);
+                    if (data == null)
+                    {
+                        data = fallbackFunction.Invoke();
+                        cache.Set(key, data, policy);
+                    }
+                }
+            }
+            return (T)data;
+        }
+
+        public static List<T> GetMemoryCacheItem<T, TKey>(string cacheKey, string key, IEnumerable<TKey> keys, Func<T, TKey> keySelector, Func<IEnumerable<TKey>, IEnumerable<T>> fallbackFunction, CacheItemPolicy policy = null)
+        {
+            if (policy == null)
+                policy = new CacheItemPolicy() { Priority = System.Runtime.Caching.CacheItemPriority.Default, SlidingExpiration = TimeSpan.FromMinutes(60) };
+
+            var cache = GetMemoryCache(cacheKey);
+
+            var data = (List<T>)cache.Get(key);
+
+            List<TKey> unmatchedKeys = null;
+            if (data != null)
+                unmatchedKeys = keys.Where(k => !data.Select(d => keySelector(d)).Contains(k)).ToList();
+            else
+                unmatchedKeys = keys.ToList();
+
+            if (unmatchedKeys.Count > 0)   //if still something to find
+            {
+                lock (cache)    //not sure if I should use cache object as my locking object
+                {
+                    data = (List<T>)cache.Get(key);
+                    if (data == null)
+                        data = new List<T>();  //ensure we are not null - we are doing an AddRange
+
+                    //do it again under a lock?
+                    unmatchedKeys = keys.Where(k => !data.Select(d => keySelector(d)).Contains(k)).ToList();
+
+                    var newData = fallbackFunction(unmatchedKeys);
+                    if (newData != null)
+                        data.AddRange(newData);
+                    cache.Set(key, data, policy);
+                }
+            }
+            return data;
+        }
+
         #region PullCache Methods
         public delegate T PullCacheData<T>();
 
@@ -167,22 +237,22 @@ namespace CodeEndeavors.Cache
             return ret;
         }
 
-        public static T PullCache<T>(string key, bool useCache, PullCacheData<T> pullFunc, CacheItemPriority priority, TimeSpan cacheTime)
+        public static T PullCache<T>(string key, bool useCache, PullCacheData<T> pullFunc, System.Web.Caching.CacheItemPriority priority, TimeSpan cacheTime)
         {
             return PullCache<T>(key, useCache, pullFunc, priority, cacheTime, null);
         }
 
         public static T PullCache<T>(string key, bool useCache, PullCacheData<T> pullFunc, string dependencyFileName)
         {
-            return PullCache<T>(key, useCache, pullFunc, CacheItemPriority.Normal, TimeSpan.MaxValue, dependencyFileName);
+            return PullCache<T>(key, useCache, pullFunc, System.Web.Caching.CacheItemPriority.Normal, TimeSpan.MaxValue, dependencyFileName);
         }
 
         public static T PullCache<T>(string key, bool useCache, PullCacheData<T> pullFunc, CacheDependency dependency)
         {
-            return PullCache<T>(key, useCache, pullFunc, CacheItemPriority.Normal, TimeSpan.MaxValue, null, dependency);
+            return PullCache<T>(key, useCache, pullFunc, System.Web.Caching.CacheItemPriority.Normal, TimeSpan.MaxValue, null, dependency);
         }
 
-        public static T PullCache<T>(string key, bool useCache, PullCacheData<T> pullFunc, CacheItemPriority priority, TimeSpan cacheTime, string dependencyFileName, CacheDependency dependency = null)
+        public static T PullCache<T>(string key, bool useCache, PullCacheData<T> pullFunc, System.Web.Caching.CacheItemPriority priority, TimeSpan cacheTime, string dependencyFileName, CacheDependency dependency = null)
         {
             T ret = default(T);
             string cacheKey = GetKey(key, typeof(T));
