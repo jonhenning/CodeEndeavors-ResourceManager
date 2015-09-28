@@ -14,6 +14,7 @@ namespace CodeEndeavors.ResourceManager.File
     {
         private Dictionary<string, object> _connection = null;  //connection is directory
         private string _resourceDir = null;
+        private string _cacheType = null;
         public delegate void SaveFunc();
         
         //todo: static or instance...  concurrency will bite us either way!
@@ -28,6 +29,7 @@ namespace CodeEndeavors.ResourceManager.File
             //_connection = ConfigurationManager.AppSettings.GetSetting(Connection, @"~\FileDb");     
             _connection = connection;
             _resourceDir = _connection.GetSetting("resourceDir", "");
+            _cacheType = _connection.GetSetting("cacheType", "web");
             
             if (string.IsNullOrEmpty(_resourceDir))
                 throw new Exception("ResourceDir key not found in connection");
@@ -80,31 +82,39 @@ namespace CodeEndeavors.ResourceManager.File
         public List<T> All<T>()
         {
             var fileName = GetJsonFileName<T>();
-            return Cache.CacheState.PullCache("FileRepository." + fileName, true,
-                delegate()
-                {
-                    var resource = new List<T>();
-                    var json = GetJsonFileContents<T>();
-                    if (json != null)
-                        resource = json.ToObject<List<T>>();
-                    return resource;
-                },
-                fileName);
+
+            CodeEndeavors.Cache.CacheState.PullCacheData<List<T>> getDelegate = delegate()
+                    {
+                        var resource = new List<T>();
+                        var json = GetJsonFileContents<T>();
+                        if (json != null)
+                            resource = json.ToObject<List<T>>();
+                        return resource;
+                    };
+
+            if (_cacheType == "request")
+                return Cache.CacheState.PullRequestCache("FileRepository." + fileName, getDelegate);
+            else
+                return Cache.CacheState.PullCache("FileRepository." + fileName, true, getDelegate, fileName);
         }
 
         public ConcurrentDictionary<string, DomainObjects.Resource<T>> AllDict<T>()
         {
             var fileName = GetJsonFileName<DomainObjects.Resource<T>>();
-            return Cache.CacheState.PullCache("FileRepository." + fileName, true,
-                delegate()
+
+            CodeEndeavors.Cache.CacheState.PullCacheData<ConcurrentDictionary<string, DomainObjects.Resource<T>>> getDelegate = delegate()
                 {
                     var resource = new List<DomainObjects.Resource<T>>();
                     var json = GetJsonFileContents<DomainObjects.Resource<T>>();
                     if (json != null)
                         resource = json.ToObject<List<DomainObjects.Resource<T>>>();
                     return new ConcurrentDictionary<string, DomainObjects.Resource<T>>(resource.ToDictionary(r => r.Id));
-                },
-                fileName);
+                };
+
+            if (_cacheType == "request")
+                return Cache.CacheState.PullRequestCache("FileRepository." + fileName, getDelegate);
+            else
+                return Cache.CacheState.PullCache("FileRepository." + fileName, true, getDelegate, fileName);
         }
 
         public void Store<T>(T item)
