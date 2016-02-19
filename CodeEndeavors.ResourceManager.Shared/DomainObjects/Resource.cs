@@ -63,8 +63,8 @@ namespace CodeEndeavors.ResourceManager.DomainObjects
         public string Key { get; set; }
         public string Type { get; set; }
         public int? Sequence { get; set; }
-        public DateTime? EffectiveDate { get; set; }
-        public DateTime? ExpirationDate { get; set; }
+        public DateTimeOffset? EffectiveDate { get; set; }
+        public DateTimeOffset? ExpirationDate { get; set; }
         public T Data { get; set; }
         //public Dictionary<string, List<string>> Scope { get; set; }
         public dynamic Scope { get; set; }

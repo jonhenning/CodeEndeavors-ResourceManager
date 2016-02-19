@@ -140,8 +140,8 @@ namespace CodeEndeavors.ResourceManager.UnitTest
             var pageId = 1;
             _repo.DeleteAll<Widget>(type);
             _repo.StoreResource(NewWidgetResource(type, key, 1, "TextHtml", pageId), _userId);
-            _repo.StoreResource(NewWidgetResource(type, key, 1, "TextHtml", pageId, DateTime.MaxValue), _userId);
-            _repo.StoreResource(NewWidgetResource(type, key, 1, "TextHtml", pageId, null, DateTime.MinValue), _userId);
+            _repo.StoreResource(NewWidgetResource(type, key, 1, "TextHtml", pageId, DateTimeOffset.MaxValue), _userId);
+            _repo.StoreResource(NewWidgetResource(type, key, 1, "TextHtml", pageId, null, DateTimeOffset.MinValue), _userId);
             _repo.SaveChanges();
 
             var widgets = _repo.GetResources<Widget>(type, key, w => w.Scope.PageId == pageId);
@@ -276,8 +276,8 @@ namespace CodeEndeavors.ResourceManager.UnitTest
             var type = "Widgets";
             var key = "";
             var pageId = 1;
-            var recentDate = DateTime.Now;
-            var yesturday = DateTime.Now.AddDays(-1);
+            var recentDate = DateTimeOffset.Now;
+            var yesturday = DateTimeOffset.Now.AddDays(-1);
             _repo.DeleteAll<Widget>(type);
             _repo.StoreResource(NewWidgetResource(type, key, 1, "TextHtml", pageId, yesturday), _userId);
             _repo.StoreResource(NewWidgetResource(type, key, 1, "TextHtml", pageId, recentDate), _userId);
@@ -336,7 +336,7 @@ namespace CodeEndeavors.ResourceManager.UnitTest
             return NewWidgetResource(type, key, seq, widgetName, pageId, null, null);
         }
 
-        private DomainObjects.Resource<Widget> NewWidgetResource(string type, string key, int seq, string widgetName, int pageId, DateTime? effectiveDate = null, DateTime? expirationDate = null)
+        private DomainObjects.Resource<Widget> NewWidgetResource(string type, string key, int seq, string widgetName, int pageId, DateTimeOffset? effectiveDate = null, DateTimeOffset? expirationDate = null)
         {
             var resource = new DomainObjects.Resource<Widget>(type, key, seq, 
                 new Widget() { Name = widgetName },

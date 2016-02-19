@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CodeEndeavors.ResourceManager.Test</RootNamespace>
     <AssemblyName>CodeEndeavors.ResourceManager.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -35,11 +36,16 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CodeEndeavors.Extensions, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\redist\CodeEndeavors.Extensions.dll</HintPath>
+    <Reference Include="CodeEndeavors.Distributed.Cache.Client, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Distributed.Cache.Client.1.0.3\lib\4.5\CodeEndeavors.Distributed.Cache.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CodeEndeavors.Extensions, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.Extensions.2.0.3\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="CodeEndeavors.ResourceManager, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -49,16 +55,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\redist\CodeEndeavors.ResourceManager.File.dll</HintPath>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager.RavenDb">
-      <HintPath>..\redist\CodeEndeavors.ResourceManager.RavenDb.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.1\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="StructureMap, Version=2.6.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System">
       <Private>True</Private>
@@ -70,12 +69,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Data">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web">
       <Private>True</Private>
     </Reference>
   </ItemGroup>

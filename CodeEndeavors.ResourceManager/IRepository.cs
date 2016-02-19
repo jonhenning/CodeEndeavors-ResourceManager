@@ -14,8 +14,6 @@ namespace CodeEndeavors.ResourceManager
     {
         List<T> Find<T>(Func<T, bool> predicate);
         List<T> All<T>();
-        void Store<T>(T item);
-        void Delete<T>(T item);
         DomainObjects.Resource<T> GetResource<T>(string id);
         List<DomainObjects.Resource<T>> FindResources<T>(Func<DomainObjects.Resource<T>, bool> predicate);
         List<DomainObjects.Resource<T>> AllResources<T>();

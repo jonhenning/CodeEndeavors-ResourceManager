@@ -26,13 +26,13 @@
   </Target>
 
   <Target Name="CreateSetupPackage" DependsOnTargets="MergeDlls" >
-    <Copy SourceFiles="$(TargetDir)\StructureMap.dll;$(TargetDir)\CodeEndeavors.Extensions.dll;" DestinationFolder="$(RedistDir)" />
+    <Copy SourceFiles="$(TargetDir)\CodeEndeavors.Extensions.dll;" DestinationFolder="$(RedistDir)" />
 
     <CreateItem Include="
                 $(RedistDir)\CodeEndeavors.Extensions.dll;
                 $(RedistDir)\CodeEndeavors.ResourceManager.dll;
                 $(RedistDir)\CodeEndeavors.ResourceManager.pdb;
-                $(RedistDir)\StructureMap.dll">
+                ">
       <Output TaskParameter="Include" ItemName="RedistDlls" />
     </CreateItem>
 

@@ -15,12 +15,7 @@ namespace CodeEndeavors.ResourceManager.Test
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-            //using (var repo = new ResourceRepository("RavenDB", ResourceRepository.RepositoryType.RavenDb))
-            //{
-
-            //var connection = "{ type:'AzureBlob', azureBlobStorage:'DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==' }";
-            //var connection = "{ type:'AzureBlob', azureBlobStorage:'dev' }";
-            var connection = "{ type:'File', resourceDir:'~/App_Data/FileDb' }";
+            var connection = "{ type:'File', resourceDir:'~/App_Data/FileDb', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }";
 
             using (var repo = new ResourceRepository(connection))
             {

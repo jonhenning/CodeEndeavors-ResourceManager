@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeEndeavors.Extensions;
 using CodeEndeavors.ResourceManager.Extensions;
-using StructureMap;
 
 namespace CodeEndeavors.ResourceManager
 {
@@ -11,22 +10,33 @@ namespace CodeEndeavors.ResourceManager
     {
         private IRepository _repository;
         private Dictionary<string, object> _connectionDict = null;
-        
+        private static string _clientId;    //static since we want it the same every time if we assign a guid
+
         public int PendingUpdates { get; set; }
 
         public ResourceRepository(string connection)
         {
             _connectionDict = connection.ToObject<Dictionary<string, object>>();
-            string assemblyName = _connectionDict.GetSetting("assembly", string.Format("CodeEndeavors.ResourceManager.{0}", _connectionDict.GetSetting("type", "File")));
+            var type = string.Format("CodeEndeavors.ResourceManager.{0}", _connectionDict.GetSetting("type", "File"));
 
-            ObjectFactory.Configure(x =>
-                x.Scan(scan =>
-                {
-                    scan.Assembly(assemblyName);
-                    scan.AddAllTypesOf<IRepository>();
-                }));
+            var cacheConnection = _connectionDict.GetSetting("cacheConnection", new Newtonsoft.Json.Linq.JObject()).ToJson().ToObject<Dictionary<string, object>>();
+            var cacheName = cacheConnection.GetSetting("cacheName", "ResourceManager.File");
+            var notifierName = cacheConnection.GetSetting("notifierName", "");
 
-            _repository = ObjectFactory.GetInstance<IRepository>();
+            if (_connectionDict.ContainsKey("notifierConnection"))
+            {
+                var notifierConnectionJson = _connectionDict.GetSetting("notifierConnection", new Newtonsoft.Json.Linq.JObject()).ToJson();
+                //var notifierConnection = notifierConnectionJson.ToObject<Dictionary<string, object>>();
+                Distributed.Cache.Client.Service.RegisterNotifier(notifierName, notifierConnectionJson);
+            }
+
+            if (!string.IsNullOrEmpty(_clientId))
+                _clientId = _connectionDict.GetSetting("clientId", cacheConnection.GetSetting("clientId", Guid.NewGuid().ToString()));
+
+            Distributed.Cache.Client.Service.RegisterCache(cacheName, cacheConnection.ToJson());
+            _connectionDict["cacheName"] = cacheName;
+
+            _repository = type.GetInstance<IRepository>();
             _repository.Initialize(_connectionDict);
         }
 
@@ -146,13 +156,6 @@ namespace CodeEndeavors.ResourceManager
             return resource;
         }
 
-        public T Store<T>(T resource, string userId)
-        {
-            _repository.Store(resource);
-            PendingUpdates++;
-            return resource;
-        }
-
         public void SaveChanges()
         {
             _repository.Save();
@@ -173,12 +176,6 @@ namespace CodeEndeavors.ResourceManager
             //SaveChanges();
         }
 
-        public void Delete<T>(T resource)
-        {
-            _repository.Delete(resource);
-            PendingUpdates++;
-            //_repository.Save();
-        }
         public void Delete<T>(DomainObjects.Resource<T> resource)
         {
             _repository.Delete(resource);

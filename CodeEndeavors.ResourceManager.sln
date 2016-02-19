@@ -1,26 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager", "CodeEndeavors.ResourceManager\CodeEndeavors.ResourceManager.csproj", "{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.Test", "CodeEndeavors.ResourceManager.Test\CodeEndeavors.ResourceManager.Test.csproj", "{AFD4F062-2551-4065-940F-F9050A25F431}"
 	ProjectSection(ProjectDependencies) = postProject
-		{023EA066-20A9-4A84-ADC8-745F29351904} = {023EA066-20A9-4A84-ADC8-745F29351904}
+		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7} = {581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}
+		{77BE6536-59B7-44B9-8257-33212500D01D} = {77BE6536-59B7-44B9-8257-33212500D01D}
 		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.Shared", "CodeEndeavors.ResourceManager.Shared\CodeEndeavors.ResourceManager.Shared.csproj", "{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.RavenDb", "CodeEndeavors.ResourceManager.RavenDb\CodeEndeavors.ResourceManager.RavenDb.csproj", "{7667CEF1-8E8E-42D6-99F7-63545AE5E949}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.UnitTest", "CodeEndeavors.ResourceManager.UnitTest\CodeEndeavors.ResourceManager.UnitTest.csproj", "{0D913ACF-FE89-4868-8D97-CE457E7AC46D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7} = {581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}
 		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
-		{7667CEF1-8E8E-42D6-99F7-63545AE5E949} = {7667CEF1-8E8E-42D6-99F7-63545AE5E949}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7FE1BAD1-70E1-4EB3-BB48-731D960A3CEE}"
@@ -32,18 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.File", "CodeEndeavors.ResourceManager.File\CodeEndeavors.ResourceManager.File.csproj", "{77BE6536-59B7-44B9-8257-33212500D01D}"
 	ProjectSection(ProjectDependencies) = postProject
-		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.Extensions", "CodeEndeavors.Extensions\CodeEndeavors.Extensions.csproj", "{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.AzureBlob", "CodeEndeavors.ResourceManager.AzureBlob\CodeEndeavors.ResourceManager.AzureBlob.csproj", "{023EA066-20A9-4A84-ADC8-745F29351904}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.MongoDb", "CodeEndeavors.ResourceManager.MongoDb\CodeEndeavors.ResourceManager.MongoDb.csproj", "{5990B5F1-C1DE-46E1-BC66-015AA3E40941}"
-	ProjectSection(ProjectDependencies) = postProject
+		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7} = {581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}
 		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
 	EndProjectSection
 EndProject
@@ -55,9 +41,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D6DEA6
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = CodeEndeavors.ResourceManager.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -97,14 +80,6 @@ Global
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}.Release|x86.ActiveCfg = Release|Any CPU
-		{7667CEF1-8E8E-42D6-99F7-63545AE5E949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7667CEF1-8E8E-42D6-99F7-63545AE5E949}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7667CEF1-8E8E-42D6-99F7-63545AE5E949}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{7667CEF1-8E8E-42D6-99F7-63545AE5E949}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7667CEF1-8E8E-42D6-99F7-63545AE5E949}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7667CEF1-8E8E-42D6-99F7-63545AE5E949}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7667CEF1-8E8E-42D6-99F7-63545AE5E949}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{7667CEF1-8E8E-42D6-99F7-63545AE5E949}.Release|x86.ActiveCfg = Release|Any CPU
 		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -124,35 +99,11 @@ Global
 		{77BE6536-59B7-44B9-8257-33212500D01D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{77BE6536-59B7-44B9-8257-33212500D01D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{77BE6536-59B7-44B9-8257-33212500D01D}.Release|x86.ActiveCfg = Release|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{AEF255A3-9CF0-42EF-96DE-DDCA673BF92E}.Release|x86.ActiveCfg = Release|Any CPU
-		{023EA066-20A9-4A84-ADC8-745F29351904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{023EA066-20A9-4A84-ADC8-745F29351904}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{023EA066-20A9-4A84-ADC8-745F29351904}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{023EA066-20A9-4A84-ADC8-745F29351904}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{023EA066-20A9-4A84-ADC8-745F29351904}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{023EA066-20A9-4A84-ADC8-745F29351904}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{023EA066-20A9-4A84-ADC8-745F29351904}.Release|Any CPU.Build.0 = Release|Any CPU
-		{023EA066-20A9-4A84-ADC8-745F29351904}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{023EA066-20A9-4A84-ADC8-745F29351904}.Release|x86.ActiveCfg = Release|Any CPU
-		{5990B5F1-C1DE-46E1-BC66-015AA3E40941}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5990B5F1-C1DE-46E1-BC66-015AA3E40941}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5990B5F1-C1DE-46E1-BC66-015AA3E40941}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{5990B5F1-C1DE-46E1-BC66-015AA3E40941}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5990B5F1-C1DE-46E1-BC66-015AA3E40941}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5990B5F1-C1DE-46E1-BC66-015AA3E40941}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5990B5F1-C1DE-46E1-BC66-015AA3E40941}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5990B5F1-C1DE-46E1-BC66-015AA3E40941}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = CodeEndeavors.ResourceManager.vsmdi
 	EndGlobalSection
 EndGlobal
