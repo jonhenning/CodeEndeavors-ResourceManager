@@ -13,11 +13,12 @@
         <dependencies>
             <group targetFramework=".NETFramework4.0">
                 <dependency id="CodeEndeavors.Extensions" version="2.0.3" />
+                <dependency id="CodeEndeavors.Distributed.Cache.Client" version="1.0.3" />
             </group>
         </dependencies>
     </metadata>
     <files>
-        <file src="CodeEndeavors.ResourceManager.dll" target="lib\net40\CodeEndeavors.ResourceManager.dll" />
-        <file src="CodeEndeavors.ResourceManager.File.dll" target="lib\net40\CodeEndeavors.ResourceManager.File.dll" />
+        <file src="CodeEndeavors.ResourceManager.dll" target="lib\net45\CodeEndeavors.ResourceManager.dll" />
+        <file src="CodeEndeavors.ResourceManager.File.dll" target="lib\net45\CodeEndeavors.ResourceManager.File.dll" />      
     </files>
 </package>
