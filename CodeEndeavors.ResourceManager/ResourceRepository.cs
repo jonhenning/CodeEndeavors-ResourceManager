@@ -17,7 +17,13 @@ namespace CodeEndeavors.ResourceManager
         public ResourceRepository(string connection)
         {
             _connectionDict = connection.ToObject<Dictionary<string, object>>();
-            var type = string.Format("CodeEndeavors.ResourceManager.{0}", _connectionDict.GetSetting("type", "File"));
+
+            //backwards compatibility hack
+            var backType = _connectionDict.GetSetting("type", "File");
+            if (backType == "File")
+                backType = "CodeEndeavors.ResourceManager.File.FileRepository";
+
+            var type = string.Format(backType);
 
             var cacheConnection = _connectionDict.GetSetting("cacheConnection", new Newtonsoft.Json.Linq.JObject()).ToJson().ToObject<Dictionary<string, object>>();
             var cacheName = cacheConnection.GetSetting("cacheName", "ResourceManager.File");
