@@ -5,7 +5,6 @@ using System.Text;
 //using Newtonsoft.Json;
 using CodeEndeavors.Extensions;
 using System.Reflection;
-//using StructureMap;
 
 namespace CodeEndeavors.ResourceManager.Test
 {
