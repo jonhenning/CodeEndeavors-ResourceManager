@@ -43,7 +43,7 @@ namespace CodeEndeavors.ResourceManager
             _connectionDict["cacheName"] = cacheName;
 
             _repository = type.GetInstance<IRepository>();
-            _repository.Initialize(_connectionDict);
+            _repository.Initialize(_connectionDict, cacheConnection);
         }
 
         public List<DomainObjects.Resource<T>> GetResources<T>()

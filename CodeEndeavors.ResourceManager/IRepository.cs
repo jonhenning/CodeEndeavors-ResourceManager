@@ -17,7 +17,7 @@ namespace CodeEndeavors.ResourceManager
         DomainObjects.Resource<T> GetResource<T>(string id);
         List<DomainObjects.Resource<T>> FindResources<T>(Func<DomainObjects.Resource<T>, bool> predicate);
         List<DomainObjects.Resource<T>> AllResources<T>();
-        void Initialize(Dictionary<string, object> connection);
+        void Initialize(Dictionary<string, object> connection, Dictionary<string, object> cacheConnection);
         void Store<T>(DomainObjects.Resource<T> item);
         void Delete<T>(DomainObjects.Resource<T> item);
         void DeleteAll<T>();
