@@ -2,6 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>CodeEndeavors.ResourceManager.SQLServer</id>
+	<title>Code Endeavors Resource Manager (SQL Server)</title>
         <version>2.0.2</version>
         <authors>Jon Henning</authors>
         <owners>Code Endeavores Inc.</owners>
