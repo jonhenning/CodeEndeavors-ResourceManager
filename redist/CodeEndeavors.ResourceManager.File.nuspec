@@ -13,7 +13,7 @@
         <releaseNotes />
         <dependencies>
             <group>
-                <dependency id="CodeEndeavors.ResourceManager" version="2.0.6" />
+                <dependency id="CodeEndeavors.ResourceManager" version="2.0.10" />
             </group>
         </dependencies>
     </metadata>
