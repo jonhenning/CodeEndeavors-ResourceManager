@@ -10,6 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManag
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7} = {581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}
 		{77BE6536-59B7-44B9-8257-33212500D01D} = {77BE6536-59B7-44B9-8257-33212500D01D}
 		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2} = {BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.Shared", "CodeEndeavors.ResourceManager.Shared\CodeEndeavors.ResourceManager.Shared.csproj", "{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}"
@@ -38,6 +39,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D6DEA6
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.SQLServer", "CodeEndeavors.ResourceManager.SQLServer\CodeEndeavors.ResourceManager.SQLServer.csproj", "{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7} = {581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}
+		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
 	EndProjectSection
 EndProject
 Global
@@ -99,6 +106,16 @@ Global
 		{77BE6536-59B7-44B9-8257-33212500D01D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{77BE6536-59B7-44B9-8257-33212500D01D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{77BE6536-59B7-44B9-8257-33212500D01D}.Release|x86.ActiveCfg = Release|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

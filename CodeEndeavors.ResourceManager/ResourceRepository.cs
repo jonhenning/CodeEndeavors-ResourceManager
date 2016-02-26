@@ -8,9 +8,11 @@ namespace CodeEndeavors.ResourceManager
 {
     public class ResourceRepository : IDisposable 
     {
+       
         private IRepository _repository;
         private Dictionary<string, object> _connectionDict = null;
         private static string _clientId;    //static since we want it the same every time if we assign a guid
+        private int _auditHistorySize;
 
         public int PendingUpdates { get; set; }
 
@@ -28,6 +30,7 @@ namespace CodeEndeavors.ResourceManager
             var cacheConnection = _connectionDict.GetSetting("cacheConnection", new Newtonsoft.Json.Linq.JObject()).ToJson().ToObject<Dictionary<string, object>>();
             var cacheName = cacheConnection.GetSetting("cacheName", "ResourceManager.File");
             var notifierName = cacheConnection.GetSetting("notifierName", "");
+            _auditHistorySize = _connectionDict.GetSetting("auditHistorySize", 10);
 
             if (_connectionDict.ContainsKey("notifierConnection"))
             {
@@ -147,16 +150,22 @@ namespace CodeEndeavors.ResourceManager
                 resource = new DomainObjects.Resource<T>(type, key, null, data);
             else
                 resource.Data = data;
-            resource.Audit.Add(new DomainObjects.Audit(userId, DateTime.UtcNow, "Save"));
-            resource.Audit = resource.Audit.OrderByDescending(a => a.Date).Take(10).ToList();   //only keep 10 audits - todo: make this configurable
+            if (_auditHistorySize > 0)
+            {
+                resource.Audit.Add(new DomainObjects.Audit(userId, DateTime.UtcNow, "Save"));
+                resource.Audit = resource.Audit.OrderByDescending(a => a.Date).Take(_auditHistorySize).ToList();   
+            }
             _repository.Store(resource);
             PendingUpdates++;
             return resource;
         }
         public DomainObjects.Resource<T> StoreResource<T>(DomainObjects.Resource<T> resource, string userId)
         {
-            resource.Audit.Add(new DomainObjects.Audit(userId, DateTime.UtcNow, "Save"));
-            resource.Audit = resource.Audit.OrderByDescending(a => a.Date).Take(10).ToList();   //only keep 10 audits - todo: make this configurable
+            if (_auditHistorySize > 0)
+            {
+                resource.Audit.Add(new DomainObjects.Audit(userId, DateTime.UtcNow, "Save"));
+                resource.Audit = resource.Audit.OrderByDescending(a => a.Date).Take(_auditHistorySize).ToList();
+            }
             _repository.Store(resource);
             PendingUpdates++;
             return resource;
@@ -202,6 +211,6 @@ namespace CodeEndeavors.ResourceManager
         {
             _repository.Dispose();
         }
-
+         
     }
 }

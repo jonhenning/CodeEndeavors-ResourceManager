@@ -64,8 +64,7 @@ namespace CodeEndeavors.ResourceManager.UnitTest
          [TestInitialize()]
          public void MyTestInitialize() 
          {
-             //_repo = new ResourceRepository("RavenDB", ResourceRepository.RepositoryType.RavenDb);
-             _repo = new ResourceRepository(ConfigurationManager.AppSettings.GetSetting("RepositoryConnection", @"{ type:'File', resourceDir:'~\\FileDb' }"));
+             _repo = new ResourceRepository(ConfigurationManager.AppSettings.GetSetting("RepositoryConnection", @"{ type:'File', resourceDir:'~/App_Data/FileDb', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }"));
          }
         //
         // Use TestCleanup to run code after each test has run

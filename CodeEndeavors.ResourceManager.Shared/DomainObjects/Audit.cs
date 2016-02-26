@@ -20,7 +20,7 @@ namespace CodeEndeavors.ResourceManager.DomainObjects
         }
 
         public string UserId { get; set; }
-        public DateTime Date { get; set; }
+        public DateTimeOffset Date { get; set; }
         public string Action { get; set; }
     }
 }

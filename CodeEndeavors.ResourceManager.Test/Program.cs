@@ -14,7 +14,8 @@ namespace CodeEndeavors.ResourceManager.Test
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-            var connection = "{ type:'File', resourceDir:'~/App_Data/FileDb', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }";
+            //var connection = "{ type:'File', resourceDir:'~/App_Data/FileDb', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }";
+            var connection = "{ type:'CodeEndeavors.ResourceManager.SQLServer.SQLRepository', dataConnection: 'Data Source=(local);Initial Catalog=Videre.ResourceManager;Persist Security Info=True;User ID=resourcemanager;Password=password', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }";
 
             using (var repo = new ResourceRepository(connection))
             {
@@ -25,13 +26,15 @@ namespace CodeEndeavors.ResourceManager.Test
 
                 var o = new MyObj() { Text = "foo" };
                 var userId = "1";
-                repo.DeleteAll<string>(type);
+                repo.DeleteAll<MyObj>();
+                repo.DeleteAll<MyObj>(type);
 
                 var resource = new DomainObjects.Resource<MyObj>()
                 {
                     Type = type,
                     Sequence = 1,
-                    Data = o
+                    Data = o,
+                    Scope = new { x = 1 }
                 };
 
                 resource = repo.StoreResource(resource, userId);
@@ -48,13 +51,10 @@ namespace CodeEndeavors.ResourceManager.Test
 
                 resources = repo.GetResources<MyObj>(type);
                 Console.WriteLine(resources.ToJson());
-            
             }
-
 
             Console.WriteLine("DONE!");
             Console.ReadLine();
-
         }
 
         public class MyObj

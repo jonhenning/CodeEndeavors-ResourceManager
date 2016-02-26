@@ -14,11 +14,12 @@ namespace CodeEndeavors.ResourceManager.File
         private Dictionary<string, object> _connection = null;  
         private Dictionary<string, object> _cacheConnection = null;  
         private string _resourceDir = null;
-        //private string _cacheType = null;
-        //public delegate void SaveFunc();
         
-        //todo: static or instance...  concurrency will bite us either way!
-        //private static ConcurrentDictionary<Type, Action> _pendingUpdates = new ConcurrentDictionary<Type, Action>();
+        private ConcurrentDictionary<string, Action> _pendingUpdates = new ConcurrentDictionary<string, Action>();
+
+        //repository instance lifespan is a single request (for videre) - not ideal as we really don't want to dictate how resourcemanager is used in relation to its lifespan
+        private ConcurrentDictionary<string, object> _pendingDict = new ConcurrentDictionary<string, object>();
+
         private string _cacheName;
         private bool _useFileMonitor;
 
@@ -42,6 +43,9 @@ namespace CodeEndeavors.ResourceManager.File
 
             if (!Directory.Exists(_resourceDir))
                 Directory.CreateDirectory(_resourceDir);
+
+            Logging.Log(Logging.LoggingLevel.Minimal, "File Repository Initialized {0}", _resourceDir);
+
         }
 
         public void Dispose()
@@ -79,6 +83,14 @@ namespace CodeEndeavors.ResourceManager.File
 
         public ConcurrentDictionary<string, DomainObjects.Resource<T>> AllDict<T>()
         {
+            var resourceType = getResourceType<T>();
+
+            if (_pendingDict.ContainsKey(resourceType))
+            {
+                Logging.Log(Logging.LoggingLevel.Verbose, "Pulled {0} from _pendingDict", resourceType);
+                return _pendingDict[resourceType] as ConcurrentDictionary<string, DomainObjects.Resource<T>>;
+            }
+
             var fileName = GetJsonFileName<DomainObjects.Resource<T>>();
 
             Func<ConcurrentDictionary<string, DomainObjects.Resource<T>>> getDelegate = delegate()
@@ -90,7 +102,9 @@ namespace CodeEndeavors.ResourceManager.File
                     return new ConcurrentDictionary<string, DomainObjects.Resource<T>>(resource.ToDictionary(r => r.Id));
                 };
 
-            return CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry(_cacheName, fileName, getDelegate, getMonitorOptions(fileName));
+            var dict = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry(_cacheName, fileName, getDelegate, getMonitorOptions(fileName));
+            _pendingDict[resourceType] = dict;
+            return dict;
         }
          
         public void Store<T>(DomainObjects.Resource<T> item)
@@ -103,13 +117,18 @@ namespace CodeEndeavors.ResourceManager.File
                     ((dynamic)item.Data).Id = item.Id;  //todo: require Id on object?
                 }
                 catch { }
-                //if (item.Data is CodeEndeavors.ResourceManager.IId)
-                //    (item.Data as CodeEndeavors.ResourceManager.IId).Id = item.Id;
             }
             var dict = AllDict<T>();
             dict[item.Id] = item;
 
-            WriteJsonFile(dict.Values); //write file right away now...  someone else could have expired cache and it got reloaded from disk without our changes!
+            Logging.Log(Logging.LoggingLevel.Detailed, "Stored {0}:{1} in _pendingDict", typeof(T).Name, item.Id);
+
+            //keeping deferred writes intact - we are storing the dictionary in a member variable (_pendingDict) so even if 
+            //item is expelled from cache we will still have our changes
+            //of course, this leads to the potential problem with concurrent writes but we would have that anyways
+            var resourceType = getResourceType<T>();
+            if (!_pendingUpdates.ContainsKey(resourceType))
+                _pendingUpdates[resourceType] = () => WriteJsonFile<T>();
         }
 
         public void Delete<T>(DomainObjects.Resource<T> item)
@@ -118,22 +137,33 @@ namespace CodeEndeavors.ResourceManager.File
             var dict = AllDict<T>();
             dict.TryRemove(item.Id, out resource);
 
+            Logging.Log(Logging.LoggingLevel.Detailed, "Removed {0}:{1} in _pendingDict", typeof(T).Name, item.Id);
+
             if (resource != null)
-                WriteJsonFile(dict.Values); //write file right away now...  someone else could have expired cache and it got reloaded from disk without our changes!
+            {
+                var resourceType = getResourceType<T>();
+                if (!_pendingUpdates.ContainsKey(resourceType))
+                    _pendingUpdates[resourceType] = () => WriteJsonFile<T>();
+            }
         }
 
         public void Save()
         {
-            //foreach (var type in _pendingUpdates.Keys)
-            //    _pendingUpdates[type]();
-            //_pendingUpdates.Clear();
+            Logging.Log(Logging.LoggingLevel.Minimal, "Save called with {0} pending updates", _pendingUpdates.Keys.Count);
+
+            foreach (var resourceType in _pendingUpdates.Keys)
+                _pendingUpdates[resourceType]();
+            _pendingUpdates.Clear();
         }
 
         public void DeleteAll<T>()
         {
             var dict = AllDict<T>();
             dict.Clear();
-            //todo:  save?
+
+            var resourceType = getResourceType<T>();
+            if (!_pendingUpdates.ContainsKey(resourceType))
+                _pendingUpdates[resourceType] = () => WriteJsonFile<T>();
         }
 
         private string GetJsonFileName<T>()
@@ -145,22 +175,41 @@ namespace CodeEndeavors.ResourceManager.File
         {
             var fileName = GetJsonFileName<T>();
             if (System.IO.File.Exists(fileName))
-                return fileName.GetFileContents();
+            {
+                var contents = fileName.GetFileContents();
+                Logging.Log(Logging.LoggingLevel.Minimal, "Retrieved data from file {0} (length={1})", fileName, contents.Length);
+                return contents;
+            }
             return null;
         }
 
-        private void WriteJsonFile<T>(IEnumerable<T> data)
+        private string getResourceType<T>()
         {
-            var fileName = GetJsonFileName<T>();
-            var json = data.ToJson(true, "db");  //pretty?
+            return typeof(T).ToString();
+        }
+
+        private void WriteJsonFile<T>()
+        {
+            var fileName = GetJsonFileName<DomainObjects.Resource<T>>();
+            var resources = AllResources<T>();
+            var json = resources.ToJson(true, "db");  //pretty?
             if (System.IO.File.Exists(fileName))    //todo: concurrent access dies!
                 System.IO.File.Delete(fileName);
             json.WriteText(fileName);
+
+            Logging.Log(Logging.LoggingLevel.Minimal, "Wrote Json File {0} with {1} resources", fileName, resources.Count);
+
+            var resourceType = getResourceType<T>();
+            object temp;
+            var success = _pendingDict.TryRemove(resourceType, out temp);
+            Logging.Log(Logging.LoggingLevel.Minimal, "Removed {0} from pendingDict ({1})", resourceType, success);
+
             expireCacheEntry(fileName);
         }
 
         private void expireCacheEntry(string key)
         {
+            Logging.Log(Logging.LoggingLevel.Minimal, "Calling Expire on {0}", key);
             CodeEndeavors.Distributed.Cache.Client.Service.ExpireCacheEntry(_cacheName, key);
         }
 
@@ -170,7 +219,6 @@ namespace CodeEndeavors.ResourceManager.File
                 return new { monitorType = "CodeEndeavors.Distributed.Cache.Client.File.FileMonitor", fileName = fileName, uniqueProperty = "fileName" };
             return null; 
         }
-
 
     }
 }
