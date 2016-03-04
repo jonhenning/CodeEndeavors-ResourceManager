@@ -36,7 +36,7 @@ namespace CodeEndeavors.Services.ResourceManager.Client.Http
 
         public ServiceResult<bool> DeleteAll(string resourceType, string type)
         {
-            return base.GetHttpRequestObject<ServiceResult<bool>>(base.RequestUrl("DeleteAll"), new { resourceType = resourceType, type = type });
+            return base.GetHttpRequestObject<ServiceResult<bool>>(base.RequestUrl("ResourcesDeleteAll"), new { resourceType = resourceType, type = type });
         }
 
     }

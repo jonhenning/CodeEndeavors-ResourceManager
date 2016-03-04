@@ -42,10 +42,6 @@
       <HintPath>..\packages\CodeEndeavors.Extensions.2.0.7\lib\net45\CodeEndeavors.Extensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="CodeEndeavors.ResourceManager, Version=2.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CodeEndeavors.ResourceManager.2.0.10\lib\net45\CodeEndeavors.ResourceManager.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX">
       <HintPath>..\redist\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
     </Reference>
