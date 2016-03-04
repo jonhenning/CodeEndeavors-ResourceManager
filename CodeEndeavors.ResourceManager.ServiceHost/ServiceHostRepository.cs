@@ -1,6 +1,4 @@
 ﻿using CodeEndeavors.Extensions;
-using CodeEndeavors.ServiceHost.Common.Services;
-using CodeEndeavors.ServiceHost.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using RepositoryDomainObjects = CodeEndeavors.Services.ResourceManager.Shared.DomainObjects;
 using DomainObjects = CodeEndeavors.ResourceManager.DomainObjects;
-using Logger = CodeEndeavors.ServiceHost.Common.Services.Logging;
 using System.Collections.Concurrent;
 using CodeEndeavors.ResourceManager;
+using CodeEndeavors.Services.ResourceManager.Client;
 
 namespace CodeEndeavors.ResourceManager.ServiceHost
 {
@@ -32,14 +30,10 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
 
         public ServiceHostRepository()
         {
-            Helpers.HandleAssemblyResolve();
-            //_service = new Stubs.Repository();
         }
 
         public void Initialize(Dictionary<string, object> connection, Dictionary<string, object> cacheConnection)
         {
-            Helpers.HandleAssemblyResolve();
-
             _connection = connection;
             _cacheConnection = cacheConnection;
             _cacheName = _cacheConnection.GetSetting("cacheName", "");
@@ -48,25 +42,28 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
             _enableAudit = _auditHistorySize > 0;
 
             var url = _connection.GetSetting("url", "");
-            var requestTimeout = _connection.GetSetting("requestTimeout", ServiceLocator.DefaultHttpRequestTimeOut);
+            var requestTimeout = _connection.GetSetting("requestTimeout", 600000);
             var httpUser = _connection.GetSetting("httpUser", "");
             var httpPassword = _connection.GetSetting("httpPassword", "");
-            var authenticationType = _connection.GetSetting("authenticationType", "None").ToType<AuthenticationType>();
+            var authenticationType = _connection.GetSetting("authenticationType", "None");
+            var logLevel = _connection.GetSetting("logLevel", "Info");
 
             if (string.IsNullOrEmpty(url))
                 throw new Exception("url key not found in connection");
 
-            if (authenticationType != AuthenticationType.None)
+            if (authenticationType != "None")
                 RepositoryService.Register(url, requestTimeout, httpUser, httpPassword, authenticationType);
             else
                 RepositoryService.Register(url, requestTimeout);
             
-
             //todo: setaquireuserid?!?!?!
             RepositoryService.Resolve().SetAquireUserIdDelegate(() => { return "5"; }); //FIX;
+            RepositoryService.Resolve().ConfigureLogging(logLevel, (string level, string message) =>
+                {
+                    Logging.Log(Logging.LoggingLevel.Minimal, message); //todo: map log levels
+                });
 
-
-            Logger.Log(Logger.LoggingLevel.Info, "ServiceHost Repository Initialized");
+            Logging.Log(Logging.LoggingLevel.Minimal, "ServiceHost Repository Initialized");
         }
 
 
@@ -104,14 +101,14 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
 
             if (_pendingDict.ContainsKey(resourceType))
             {
-                Logger.Log(Logger.LoggingLevel.Trace, "Pulled {0} from _pendingDict", resourceType);
+                Logging.Log(Logging.LoggingLevel.Verbose, "Pulled {0} from _pendingDict", resourceType);
                 return _pendingDict[resourceType] as ConcurrentDictionary<string, DomainObjects.Resource<T>>;
             }
 
             Func<ConcurrentDictionary<string, DomainObjects.Resource<T>>> getDelegate = delegate()
             {
                 var resource = new List<DomainObjects.Resource<T>>();
-                var sr = ServiceLocator.Resolve<Client.RepositoryService>().GetResources(resourceType, _enableAudit);
+                var sr = RepositoryService.Resolve().GetResources(resourceType, _enableAudit);
 
                 if (sr.Success)
                 {
@@ -168,7 +165,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
                     if (_pendingAuditUpdates.ContainsKey(resourceType))
                         _pendingResourceUpdates[resourceType].ForEach(r => r.ResourceAudits = _pendingAuditUpdates[resourceType].Where(a => a.ResourceId == r.Id).ToList());
 
-                    var sr = ServiceLocator.Resolve<Client.RepositoryService>().SaveResources(_pendingResourceUpdates[resourceType]);
+                    var sr = RepositoryService.Resolve().SaveResources(_pendingResourceUpdates[resourceType]);
                     if (!sr.Success)
                         throw new Exception(sr.ToString());
 
@@ -191,7 +188,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
         public void DeleteAll<T>()
         {
             var resourceType = getResourceType<T>();
-            var sr = ServiceLocator.Resolve<Client.RepositoryService>().DeleteAll(resourceType);
+            var sr = RepositoryService.Resolve().DeleteAll(resourceType);
             if (sr.Success)
             {
                 expireCacheEntry(resourceType);
@@ -279,17 +276,6 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
         {
 
         }
-
-        //public static void Register(string url, int requestTimeout)
-        //{
-        //    ServiceLocator.Register<Client.Repository>(url, requestTimeout);
-        //}
-
-        //public static Client.Repository Resolve()
-        //{
-        //    return ServiceLocator.Resolve<Client.Repository>();
-        //}
-
 
     }
 }

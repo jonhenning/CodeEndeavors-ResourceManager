@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT! -->
+  <PropertyGroup>
+    <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+    <RedistDir>$(RootDir)\redist</RedistDir>
+    <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+    <CommonLibDir>$(RootDir)\lib</CommonLibDir>
+    <CommonBinDir>$(CommonLibDir)</CommonBinDir>
+    <MSBuildTargetsDir>$(CommonBinDir)\MSBuildTargets</MSBuildTargetsDir>
+    <DeployDir></DeployDir>
+  </PropertyGroup>
+
+  <!-- Import to use Common Targets\Tasks -->
+  <Import Project="$(MSBuildTargetsDir)\MSBuild.Community.Tasks.Targets"/>
+  <Target Name="AfterBuild">
+    <CallTarget Targets="CreateSetupPackage" />
+    <CallTarget Targets="Deploy" />
+  </Target>
+
+  <Target Name="CreateSetupPackage" >
+    <Copy SourceFiles="$(TargetDir)\$(MSBuildProjectName).dll;$(TargetDir)\$(MSBuildProjectName).pdb" DestinationFolder="$(RedistDir)" />
+    <CreateItem Include="
+                $(RedistDir)\$(MSBuildProjectName).dll;
+                $(RedistDir)\$(MSBuildProjectName).pdb;
+                ">
+      <Output TaskParameter="Include" ItemName="RedistDlls" />
+    </CreateItem>
+
+    <Zip Files="@(RedistDlls)" WorkingDirectory="$(RedistDir)\" ZipFileName="$(RedistDir)\$(MSBuildProjectName).zip" />
+  </Target>
+
+  <Target Name="Deploy" Condition="Exists('$(DeployDir)')">
+    <Copy SourceFiles="$(RedistDir)\$(MSBuildProjectName).zip" DestinationFolder="$(DeployDir)" />
+    <Unzip TargetDirectory="$(DeployDir)\$(MSBuildProjectName)" ZipFileName="$(RedistDir)\$(MSBuildProjectName).zip" />
+  </Target>
+
+
+</Project>
