@@ -24,7 +24,7 @@ namespace CodeEndeavors.Services.ResourceManager.Client
             _service = new Http.Repository(httpServiceUrl, requestTimeout, restfulServerExtension);
         }
         public RepositoryService(string httpServiceUrl, int requestTimeout, string restfulServerExtension, string httpUser, string httpPassword, string authenticationType)
-        {
+        { 
             Helpers.HandleAssemblyResolve();
             _service = new Http.Repository(httpServiceUrl, requestTimeout, restfulServerExtension, httpUser, httpPassword, authenticationType.ToType<AuthenticationType>());
         }
@@ -79,9 +79,9 @@ namespace CodeEndeavors.Services.ResourceManager.Client
         {
             ServiceLocator.Register<Client.RepositoryService>(url, requestTimeout);
         }
-        public static void Register(string url, int requestTimeout, string httpUser, string httpPassword, AuthenticationType authenticationType)
+        public static void Register(string url, int requestTimeout, string httpUser, string httpPassword, string authenticationType)
         {
-            ServiceLocator.Register<Client.RepositoryService>(url, requestTimeout, httpUser, httpPassword, authenticationType);
+            ServiceLocator.Register<Client.RepositoryService>(url, requestTimeout, httpUser, httpPassword, authenticationType.ToType<AuthenticationType>());
         }
 
         public static Client.RepositoryService Resolve()
