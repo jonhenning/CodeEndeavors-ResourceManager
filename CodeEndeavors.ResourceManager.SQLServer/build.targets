@@ -7,12 +7,12 @@
     <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
     <CommonLibDir>$(RootDir)\lib</CommonLibDir>
     <CommonBinDir>$(CommonLibDir)</CommonBinDir>
-    <MSBuildTasksDir>$(CommonBinDir)\MSBuildTasks</MSBuildTasksDir>
+    <MSBuildTargetsDir>$(CommonBinDir)\MSBuildTargets</MSBuildTargetsDir>
     <DeployDir></DeployDir>
   </PropertyGroup>
 
   <!-- Import to use Common Targets\Tasks -->
-  <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(MSBuildTargetsDir)\MSBuild.Community.Tasks.Targets"/>
   <Target Name="AfterBuild">
     <CallTarget Targets="CreateSetupPackage" />
     <CallTarget Targets="Deploy" />

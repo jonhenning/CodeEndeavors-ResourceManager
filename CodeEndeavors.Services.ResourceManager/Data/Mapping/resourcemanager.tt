@@ -1,0 +1,34 @@
+﻿<#@ include file="EF.Reverse.POCO.Core.ttinclude" #>
+
+<#
+    string[] IncludedTables = new[] {"Resource", "ResourceAudit"}; 
+    string[] IncludedProcs = null;// = new[] {"Proc1"};
+
+    ConnectionStringName = "CodeEndeavors.Services.ResourceManager.Properties.Settings.resourcemanagerConnection";
+    ElementsToGenerate = Elements.PocoConfiguration;
+    PocoNamespace = "CodeEndeavors.Services.ResourceManager.Shared.DomainObjects";
+    ContextNamespace = "CodeEndeavors.Services.ResourceManager.Data";
+    UnitOfWorkNamespace = "CodeEndeavors.Services.ResourceManager.Data";	
+    PocoConfigurationNamespace = "CodeEndeavors.Services.ResourceManager.Data.Mapping";
+    DbContextName = "resourcemanagerContext";
+	//ColumnNameMaps = new Dictionary<string, string>() {{"OriginalName", "NewName"}};
+
+#>
+
+<#@ include file="EF.Reverse.CE.POCO.ttinclude" #>
+
+
+<#
+    AdditionalNamespaces = new[] { "System", "System.Collections.Generic" };
+
+    // Read schema
+    var factory = GetDbProviderFactory();
+    var tables = LoadTables(factory);
+    var storedProcs = LoadStoredProcs(factory);
+    
+    // Generate output
+    if (tables.Count > 0 || storedProcs.Count > 0)
+    {
+#>
+<#@ include file="EF.Reverse.POCO.ttinclude" #>
+<# } #>

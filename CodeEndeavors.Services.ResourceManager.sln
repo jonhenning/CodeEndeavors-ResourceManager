@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.Services.ResourceManager.Shared", "CodeEndeavors.Services.ResourceManager.Shared\CodeEndeavors.Services.ResourceManager.Shared.csproj", "{F318BBA2-2EE0-4BD1-A0A1-421074FE7865}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.Services.ResourceManager", "CodeEndeavors.Services.ResourceManager\CodeEndeavors.Services.ResourceManager.csproj", "{679371A5-D2B0-49FC-84F1-8B1CB4B45382}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.Services.ResourceManager.Client", "CodeEndeavors.Services.ResourceManager.Client\CodeEndeavors.Services.ResourceManager.Client.csproj", "{3EFDB665-2A21-4790-981D-7702B1EA9D56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.Services.ResourceManager.Test", "CodeEndeavors.Services.ResourceManager.Test\CodeEndeavors.Services.ResourceManager.Test.csproj", "{43EF4928-D77D-48DB-8525-51335FAC2894}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3EFDB665-2A21-4790-981D-7702B1EA9D56} = {3EFDB665-2A21-4790-981D-7702B1EA9D56}
+		{F318BBA2-2EE0-4BD1-A0A1-421074FE7865} = {F318BBA2-2EE0-4BD1-A0A1-421074FE7865}
+		{679371A5-D2B0-49FC-84F1-8B1CB4B45382} = {679371A5-D2B0-49FC-84F1-8B1CB4B45382}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7D4310B5-4677-4A5C-AC15-F2E6D5DDCBFD}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F318BBA2-2EE0-4BD1-A0A1-421074FE7865}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F318BBA2-2EE0-4BD1-A0A1-421074FE7865}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F318BBA2-2EE0-4BD1-A0A1-421074FE7865}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F318BBA2-2EE0-4BD1-A0A1-421074FE7865}.Release|Any CPU.Build.0 = Release|Any CPU
+		{679371A5-D2B0-49FC-84F1-8B1CB4B45382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{679371A5-D2B0-49FC-84F1-8B1CB4B45382}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{679371A5-D2B0-49FC-84F1-8B1CB4B45382}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{679371A5-D2B0-49FC-84F1-8B1CB4B45382}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EFDB665-2A21-4790-981D-7702B1EA9D56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EFDB665-2A21-4790-981D-7702B1EA9D56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EFDB665-2A21-4790-981D-7702B1EA9D56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EFDB665-2A21-4790-981D-7702B1EA9D56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43EF4928-D77D-48DB-8525-51335FAC2894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43EF4928-D77D-48DB-8525-51335FAC2894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43EF4928-D77D-48DB-8525-51335FAC2894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43EF4928-D77D-48DB-8525-51335FAC2894}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -7,14 +7,14 @@
     <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
     <CommonLibDir>$(RootDir)\lib</CommonLibDir>
     <CommonBinDir>$(CommonLibDir)</CommonBinDir>
-    <MSBuildTasksDir>$(CommonBinDir)\MSBuildTasks</MSBuildTasksDir>
+    <MSBuildTargetsDir>$(CommonBinDir)\MSBuildTargets</MSBuildTargetsDir>
     <InternalizedDlls>CodeEndeavors.ResourceManager.Shared.dll</InternalizedDlls>
     <ILMergeTargetPlatform>/targetplatform:v4,"%ProgramFiles(x86)%\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client"</ILMergeTargetPlatform>
     <DeployDir></DeployDir>
   </PropertyGroup>
 
   <!-- Import to use Common Targets\Tasks -->
-  <Import Project="$(MSBuildTasksDir)\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="$(MSBuildTargetsDir)\MSBuild.Community.Tasks.Targets"/>
   <Target Name="AfterBuild">
     <CallTarget Targets="CreateSetupPackage" />
     <CallTarget Targets="Deploy" />

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- PLEASE NOTE THAT CHANGES TO THIS FILE WILL NOT TAKE AFFECT UNTIL YOU UNLOAD AND RELOAD YOUR PROJECT! -->
+    <PropertyGroup>
+        <ProjectFullName>CodeEndeavors.Services.ResourceManager</ProjectFullName>
+        <Deploy>1</Deploy>
+        <InternalizedDlls></InternalizedDlls>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+        <RedistDir>$(RootDir)\redist</RedistDir>
+        <CommonLibDir>$(RootDir)\lib</CommonLibDir>
+        <ServiceDir>$(RootDir)\service</ServiceDir>
+        <ServiceHostBin>..\ServiceHost\bin</ServiceHostBin>
+        <ProgramFiles32 Condition="Exists('$(PROGRAMFILES) (x86)')">$(PROGRAMFILES) (x86)</ProgramFiles32>
+        <ProgramFiles32 Condition="$(ProgramFiles32) == ''">$(PROGRAMFILES)</ProgramFiles32>
+        <ILMergeTargetPlatform>/targetplatform:v4,"$(PROGRAMFILES)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client"</ILMergeTargetPlatform>
+    </PropertyGroup>
+    <ItemGroup>
+      <ServiceHostBins Include="$(ServiceHostBin)" />
+    </ItemGroup>
+
+  <Import Project="$(CommonLibDir)\MSBuildTargets\MSBuild.Community.Tasks.Targets" Condition="Exists('$(CommonLibDir)\MSBuildTargets\MSBuild.Community.Tasks.Targets')"/>
+
+    <Target Name="AfterBuild">
+        <CallTarget Targets="InternalizeDependencies" />
+        <CallTarget Targets="CreateSetupPackage" />
+        <CallTarget Targets="DeployPackage" />
+    </Target>
+
+    <Target Name="InternalizeDependencies">
+        <MakeDir Directories="$(ServiceDir)" />
+        <Exec Command="&quot;$(CommonLibDir)\ILMerge.exe&quot; /log $(ILMergeTargetPlatform) /internalize:&quot;$(CommonLibDir)\internalizeexclude.regex&quot; /out:&quot;$(ServiceDir)\$(ProjectFullName).dll&quot; &quot;$(ProjectFullName).dll&quot; &quot;$(ProjectFullName).Shared.dll&quot; $(InternalizedDlls)" WorkingDirectory="$(TargetDir)" />
+    </Target>
+
+    <Target Name="CleanRedistDir">
+        <MakeDir Directories="$(RedistDir)"/>
+
+        <CreateItem Include="$(RedistDir)\$(ProjectFullName).zip;">
+            <Output TaskParameter="Include" ItemName="ExistingSetups" />
+        </CreateItem>
+        <Delete Files="@(ExistingSetups)" TreatErrorsAsWarnings="true" />
+    </Target>
+
+    <Target Name="CreateSetupPackage" DependsOnTargets="CleanRedistDir" >
+        <Zip Files="$(ServiceDir)\$(ProjectFullName).dll;$(ServiceDir)\$(ProjectFullName).pdb;$(TargetDir)\$(ProjectFullName).dll.config;$(TargetDir)\$(ProjectFullName).api.xml;$(TargetDir)\$(ProjectFullName).log4net.config;@(DllDependencies);" WorkingDirectory="$(TargetDir)\" Flatten="true" ZipFileName="$(RedistDir)\$(ProjectFullName).zip" />
+        <Unzip TargetDirectory="$(RedistDir)" ZipFileName="$(RedistDir)\$(ProjectFullName).zip" />
+        <RemoveDir Directories="$(ServiceDir)" />
+    </Target>
+
+    <Target Name="DeployPackage" Condition="$(Deploy) == '1'">
+      <Copy SourceFiles="$(TargetDir)\CodeEndeavors.Extensions.dll" DestinationFolder="%(ServiceHostBins.FullPath)" Condition="!Exists('%(ServiceHostBins.FullPath)\CodeEndeavors.Extensions.dll')" />
+      <Copy SourceFiles="$(TargetDir)\CodeEndeavors.ServiceHost.dll" DestinationFolder="%(ServiceHostBins.FullPath)" Condition="!Exists('%(ServiceHostBins.FullPath)\CodeEndeavors.ServiceHost.dll')" />
+      <Copy SourceFiles="$(TargetDir)\CodeEndeavors.ServiceHost.Common.dll" DestinationFolder="%(ServiceHostBins.FullPath)" Condition="!Exists('%(ServiceHostBins.FullPath)\CodeEndeavors.ServiceHost.Common.dll')" />
+
+      <Copy SourceFiles="$(RedistDir)\$(ProjectFullName).zip" DestinationFolder="%(ServiceHostBins.FullPath)" SkipUnchangedFiles="false" />
+      <Unzip TargetDirectory="%(ServiceHostBins.FullPath)" ZipFileName="%(ServiceHostBins.FullPath)\$(ProjectFullName).zip" />
+    </Target>
+
+</Project>
