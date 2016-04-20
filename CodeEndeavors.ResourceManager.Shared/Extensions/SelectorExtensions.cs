@@ -33,7 +33,7 @@ namespace CodeEndeavors.ResourceManager.Extensions
             //todo: perf... double match score calculation
             var matches = Items.Where(i => i.Effective && Queries.GetMatchScore(i) > 0)
                     .OrderByDescending(i => Queries.GetMatchScore(i))
-                    .ThenByDescending(i => i.EffectiveDate.HasValue ? i.EffectiveDate.Value : DateTime.MinValue)
+                    .ThenByDescending(i => i.EffectiveDate.HasValue ? i.EffectiveDate.Value : DateTimeOffset.MinValue)
                     .ToList();
             if (matches.Count > 0)
             {

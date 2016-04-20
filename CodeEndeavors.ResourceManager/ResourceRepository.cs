@@ -152,7 +152,7 @@ namespace CodeEndeavors.ResourceManager
                 resource.Data = data;
             if (_auditHistorySize > 0)
             {
-                resource.Audit.Add(new DomainObjects.Audit(userId, DateTime.UtcNow, "Save"));
+                resource.Audit.Add(new DomainObjects.Audit(userId, DateTimeOffset.UtcNow, "Save"));
                 resource.Audit = resource.Audit.OrderByDescending(a => a.Date).Take(_auditHistorySize).ToList();   
             }
             _repository.Store(resource);
@@ -163,7 +163,7 @@ namespace CodeEndeavors.ResourceManager
         {
             if (_auditHistorySize > 0)
             {
-                resource.Audit.Add(new DomainObjects.Audit(userId, DateTime.UtcNow, "Save"));
+                resource.Audit.Add(new DomainObjects.Audit(userId, DateTimeOffset.UtcNow, "Save"));
                 resource.Audit = resource.Audit.OrderByDescending(a => a.Date).Take(_auditHistorySize).ToList();
             }
             _repository.Store(resource);
@@ -200,8 +200,8 @@ namespace CodeEndeavors.ResourceManager
 
         public DomainObjects.Resource<T> ExpireResource<T>(DomainObjects.Resource<T> resource, string userId) 
         {
-            resource.Audit.Add(new DomainObjects.Audit(userId, DateTime.UtcNow, "Delete"));
-            resource.ExpirationDate = DateTime.UtcNow.AddMinutes(-1);
+            resource.Audit.Add(new DomainObjects.Audit(userId, DateTimeOffset.UtcNow, "Delete"));
+            resource.ExpirationDate = DateTimeOffset.UtcNow.AddMinutes(-1);
             _repository.Store(resource);
             //_repository.Save();
             return resource;

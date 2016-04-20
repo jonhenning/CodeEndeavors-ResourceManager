@@ -12,7 +12,7 @@ namespace CodeEndeavors.ResourceManager.DomainObjects
 
         }
         
-        public Audit(string UserId, DateTime Date, string Action)
+        public Audit(string UserId, DateTimeOffset Date, string Action)
         {
             this.UserId = UserId;
             this.Date = Date;

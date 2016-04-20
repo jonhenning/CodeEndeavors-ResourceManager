@@ -74,7 +74,7 @@ namespace CodeEndeavors.ResourceManager.DomainObjects
         {
             get
             {
-                return ExpirationDate.HasValue && ExpirationDate.Value < DateTime.UtcNow;
+                return ExpirationDate.HasValue && ExpirationDate.Value < DateTimeOffset.UtcNow;
             }
         }
 
@@ -82,7 +82,7 @@ namespace CodeEndeavors.ResourceManager.DomainObjects
         {
             get
             {
-                return Deleted == false && (!EffectiveDate.HasValue || EffectiveDate.Value < DateTime.UtcNow);
+                return Deleted == false && (!EffectiveDate.HasValue || EffectiveDate.Value < DateTimeOffset.UtcNow);
             }
         }
 
