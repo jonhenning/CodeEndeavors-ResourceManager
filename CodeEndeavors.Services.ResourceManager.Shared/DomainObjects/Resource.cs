@@ -30,6 +30,7 @@ namespace CodeEndeavors.Services.ResourceManager.Shared.DomainObjects
         public DateTimeOffset? ExpirationDate { get; set; } // ExpirationDate
         public string Scope { get; set; } // Scope
         public string Data { get; set; } // Data
+        public string Namespace { get; set; } // Namespace
 
         // Reverse navigation
         public virtual ICollection<ResourceAudit> ResourceAudits { get; set; } // ResourceAudit.FK_ResourceAudit_Resource

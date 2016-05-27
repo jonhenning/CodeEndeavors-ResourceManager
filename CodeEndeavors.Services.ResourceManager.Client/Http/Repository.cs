@@ -13,7 +13,7 @@ namespace CodeEndeavors.Services.ResourceManager.Client.Http
         {
         }
 
-        public Repository(string httpServiceUrl, int requestTimeout, string restfulServerExtension, string httpUser, string httpPassword, AuthenticationType authenticationType)
+        public Repository(string httpServiceUrl, int requestTimeout, string restfulServerExtension, string httpUser, string httpPassword, string authenticationType)
             : base("Repository", httpServiceUrl, requestTimeout, restfulServerExtension, httpUser, httpPassword, authenticationType)
         {
         }
@@ -24,9 +24,9 @@ namespace CodeEndeavors.Services.ResourceManager.Client.Http
         }
 
 
-        public ServiceResult<List<DomainObjects.Resource>> GetResources(string resourceType, bool includeAudits)
+        public ServiceResult<List<DomainObjects.Resource>> GetResources(string resourceType, bool includeAudits, string ns)
         {
-            return base.GetHttpRequestObject<ServiceResult<List<DomainObjects.Resource>>>(base.RequestUrl("ResourcesGet"), new { resourceType = resourceType, includeAudits = includeAudits });
+            return base.GetHttpRequestObject<ServiceResult<List<DomainObjects.Resource>>>(base.RequestUrl("ResourcesGet"), new { resourceType = resourceType, includeAudits = includeAudits, ns = ns });
         }
 
         public ServiceResult<bool> SaveResources(List<DomainObjects.Resource> resources)
@@ -34,9 +34,9 @@ namespace CodeEndeavors.Services.ResourceManager.Client.Http
             return base.GetHttpRequestObject<ServiceResult<bool>>(base.RequestUrl("ResourcesSave"), resources);
         }
 
-        public ServiceResult<bool> DeleteAll(string resourceType, string type)
+        public ServiceResult<bool> DeleteAll(string resourceType, string type, string ns)
         {
-            return base.GetHttpRequestObject<ServiceResult<bool>>(base.RequestUrl("ResourcesDeleteAll"), new { resourceType = resourceType, type = type });
+            return base.GetHttpRequestObject<ServiceResult<bool>>(base.RequestUrl("ResourcesDeleteAll"), new { resourceType = resourceType, type = type, ns = ns });
         }
 
     }

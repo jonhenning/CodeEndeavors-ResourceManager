@@ -36,6 +36,7 @@ namespace CodeEndeavors.Services.ResourceManager.Data.Mapping
             Property(x => x.ExpirationDate).HasColumnName("ExpirationDate").IsOptional();
             Property(x => x.Scope).HasColumnName("Scope").IsOptional().HasMaxLength(500);
             Property(x => x.Data).HasColumnName("Data").IsOptional().HasMaxLength(1073741823);
+            Property(x => x.Namespace).HasColumnName("Namespace").IsOptional().IsUnicode(false).HasMaxLength(200);
             InitializePartial();
         }
         partial void InitializePartial();

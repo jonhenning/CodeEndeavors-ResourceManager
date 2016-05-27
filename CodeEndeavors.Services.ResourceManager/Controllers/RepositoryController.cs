@@ -28,7 +28,7 @@ namespace CodeEndeavors.Services.ResourceManager.Controllers
         [HttpPost]
         public ServiceResult<List<DomainObjects.Resource>> ResourcesGet(string userId, [FromBody]Dictionary<string, object> arguments)
         {
-            return RepositoryService.GetResources(arguments.GetSetting("resourceType", ""), arguments.GetSetting("includeAudits", false));
+            return RepositoryService.GetResources(arguments.GetSetting("resourceType", ""), arguments.GetSetting("includeAudits", false), arguments.GetSetting("ns", ""));
         }
 
         [HttpPost]
@@ -40,7 +40,7 @@ namespace CodeEndeavors.Services.ResourceManager.Controllers
         [HttpPost]
         public ServiceResult<bool> ResourcesDeleteAll(string userId, [FromBody]Dictionary<string, object> arguments)
         {
-            return RepositoryService.DeleteAll(arguments.GetSetting("resourceType", ""), arguments.GetSetting("type", ""));
+            return RepositoryService.DeleteAll(arguments.GetSetting("resourceType", ""), arguments.GetSetting("type", ""), arguments.GetSetting("ns", ""));
         }
 
         //[HttpPost]

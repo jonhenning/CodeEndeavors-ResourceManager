@@ -26,36 +26,49 @@ namespace CodeEndeavors.Services.ResourceManager.Client
         public RepositoryService(string httpServiceUrl, int requestTimeout, string restfulServerExtension, string httpUser, string httpPassword, string authenticationType)
         { 
             Helpers.HandleAssemblyResolve();
-            _service = new Http.Repository(httpServiceUrl, requestTimeout, restfulServerExtension, httpUser, httpPassword, authenticationType.ToType<AuthenticationType>());
+            _service = new Http.Repository(httpServiceUrl, requestTimeout, restfulServerExtension, httpUser, httpPassword, authenticationType);
         }
 
         public ClientCommandResult<List<DomainObjects.Resource>> GetResources(string resourceType, bool includeAudit)
         {
+            return GetResources(resourceType, includeAudit, null);
+        }
+        public ClientCommandResult<List<DomainObjects.Resource>> GetResources(string resourceType, bool includeAudit, string ns)
+        {
             return ClientCommandResult<List<DomainObjects.Resource>>.Execute(result =>
             {
-                result.ReportResult(_service.GetResources(resourceType, includeAudit), true);
+                result.ReportResult(_service.GetResources(resourceType, includeAudit, ns), true);
             });
         }
 
         public ClientCommandResult<bool> SaveResources(List<DomainObjects.Resource> resources)
         {
+            return SaveResources(resources, null);
+        }
+        public ClientCommandResult<bool> SaveResources(List<DomainObjects.Resource> resources, string ns)
+        {
             return ClientCommandResult<bool>.Execute(result =>
             {
+                resources.ForEach(r => r.Namespace = ns);
                 result.ReportResult(_service.SaveResources(resources), true);
             });
         }
         public ClientCommandResult<bool> DeleteAll(string resourceType, string type)
         {
+            return DeleteAll(resourceType, type, null);
+        }
+        public ClientCommandResult<bool> DeleteAll(string resourceType, string type, string ns)
+        {
             return ClientCommandResult<bool>.Execute(result =>
             {
-                result.ReportResult(_service.DeleteAll(resourceType, type), true);
+                result.ReportResult(_service.DeleteAll(resourceType, type, ns), true);
             });
         }
         public ClientCommandResult<bool> DeleteAll(string resourceType)
         {
             return ClientCommandResult<bool>.Execute(result =>
             {
-                result.ReportResult(_service.DeleteAll(resourceType, ""), true);
+                result.ReportResult(_service.DeleteAll(resourceType, "", null), true);
             });
         }
 

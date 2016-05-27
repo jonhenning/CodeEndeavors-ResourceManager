@@ -22,14 +22,14 @@ namespace CodeEndeavors.Services.ResourceManager
             Schema.EnsureSchema(_connection);
         }
 
-        public ServiceResult<List<DomainObjects.Resource>> GetResources(string resourceType, bool includeAudit)
+        public ServiceResult<List<DomainObjects.Resource>> GetResources(string resourceType, bool includeAudit, string ns)
         {
             return this.ExecuteServiceResult<List<DomainObjects.Resource>>(result =>
             {
                 using (var db = new Data.resourcemanagerContext(_connection))
                 {
                     db.Configuration.ProxyCreationEnabled = false;
-                    var resources = db.Resources.Where(r => r.ResourceType.Equals(resourceType, StringComparison.InvariantCultureIgnoreCase)).AsNoTracking().ToList();
+                    var resources = db.Resources.Where(r => r.ResourceType.Equals(resourceType, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(ns) || r.Namespace.Equals(ns, StringComparison.InvariantCultureIgnoreCase))).AsNoTracking().ToList();
                     if (includeAudit)
                     {
                         var ids = resources.Select(r => r.Id).ToList();
@@ -85,13 +85,13 @@ namespace CodeEndeavors.Services.ResourceManager
             });
         }
 
-        public ServiceResult<bool> DeleteAll(string resourceType, string type)
+        public ServiceResult<bool> DeleteAll(string resourceType, string type, string ns)
         {
             return this.ExecuteServiceResult<bool>(result =>
             {
                 using (var db = new Data.resourcemanagerContext(_connection))
                 {
-                    var resources = db.Resources.Where(r => r.ResourceType.Equals(resourceType, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(type) || r.Type.Equals(type, StringComparison.InvariantCultureIgnoreCase))).ToList();
+                    var resources = db.Resources.Where(r => r.ResourceType.Equals(resourceType, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(type) || r.Type.Equals(type, StringComparison.InvariantCultureIgnoreCase)) && (string.IsNullOrEmpty(ns) || r.Namespace.Equals(ns, StringComparison.InvariantCultureIgnoreCase))).ToList();
                     var ids = resources.Select(r => r.Id).ToList();
                     var audits = db.ResourceAudits.Where(r => ids.Contains(r.ResourceId)).ToList();
                     foreach (var audit in audits)

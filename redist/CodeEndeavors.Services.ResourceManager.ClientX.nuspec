@@ -13,6 +13,7 @@
         <releaseNotes />
         <dependencies>
             <group>
+                <dependency id="CodeEndeavors.ServiceHost.Common" version="2.0.37" />
             </group>
         </dependencies>
     </metadata>
