@@ -93,6 +93,10 @@ namespace CodeEndeavors.Services.ResourceManager
                 {
                     "if not exists (SELECT 1 FROM sysobjects where name = 'Resource') BEGIN CREATE TABLE Resource(Id varchar(100) NOT NULL, ResourceType varchar(200) NULL, [Key] varchar(200) NULL,Type varchar(200) NULL,Sequence int NULL,EffectiveDate datetimeoffset(7) NULL,ExpirationDate datetimeoffset(7) NULL,Scope nvarchar(500) NULL,Data ntext NULL)  ON [PRIMARY] TEXTIMAGE_ON [PRIMARY] ALTER TABLE Resource ADD CONSTRAINT PK_Resource PRIMARY KEY CLUSTERED ( Id ) CREATE NONCLUSTERED INDEX IX_ResourceType ON Resource (ResourceType) END",
                     "if not exists (SELECT 1 FROM sysobjects where name = 'ResourceAudit') BEGIN CREATE TABLE [ResourceAudit]([Id] [int] IDENTITY(1,1) NOT NULL, [ResourceId] varchar(100) NOT NULL, [UserId] [varchar](100) NULL, [AuditDate] [datetimeoffset](7) NOT NULL, [Action] [varchar](20) NOT NULL, CONSTRAINT [PK_ResourceAudit] PRIMARY KEY CLUSTERED (	[Id] ASC )) ALTER TABLE [dbo].[ResourceAudit]  WITH CHECK ADD  CONSTRAINT [FK_ResourceAudit_Resource] FOREIGN KEY([ResourceId]) REFERENCES [dbo].[Resource] ([Id]) ALTER TABLE [dbo].[ResourceAudit] CHECK CONSTRAINT [FK_ResourceAudit_Resource] END"
+                }},
+                {2, new List<string>()  //version 2 scripts
+                {
+                    "IF NOT EXISTS(SELECT * from syscolumns where name = 'Namespace' and id = (select id from sysobjects where name = 'Resource' and xtype = 'U')) BEGIN ALTER TABLE Resource ADD [Namespace] varchar(200) NULL END"
                 }}
             };
 
