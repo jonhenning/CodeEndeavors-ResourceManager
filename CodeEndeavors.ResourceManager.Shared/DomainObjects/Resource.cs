@@ -68,6 +68,8 @@ namespace CodeEndeavors.ResourceManager.DomainObjects
         public T Data { get; set; }
         //public Dictionary<string, List<string>> Scope { get; set; }
         public dynamic Scope { get; set; }
+        public string Namespace { get; set; }
+
         //public ExpandoObject Scope { get; set; }
         public List<Audit> Audit { get; set; }
         public bool Deleted

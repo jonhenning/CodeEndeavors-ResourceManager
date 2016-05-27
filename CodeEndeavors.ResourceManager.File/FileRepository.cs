@@ -14,6 +14,7 @@ namespace CodeEndeavors.ResourceManager.File
         private Dictionary<string, object> _connection = null;  
         private Dictionary<string, object> _cacheConnection = null;  
         private string _resourceDir = null;
+        private string _namespace = null;
         
         private ConcurrentDictionary<string, Action> _pendingUpdates = new ConcurrentDictionary<string, Action>();
 
@@ -32,6 +33,8 @@ namespace CodeEndeavors.ResourceManager.File
             _connection = connection;
             _cacheConnection = cacheConnection;
             _resourceDir = _connection.GetSetting("resourceDir", "");
+            _namespace = _connection.GetSetting<string>("namespace", null);
+
             _cacheName = _cacheConnection.GetSetting("cacheName", "");
             _useFileMonitor = _connection.GetSetting("useFileMonitor", false);
             
@@ -168,7 +171,10 @@ namespace CodeEndeavors.ResourceManager.File
 
         private string GetJsonFileName<T>()
         {
-            return Path.Combine(_resourceDir, typeof(T).ToString()) + ".json";
+            var fileName = typeof(T).ToString();
+            if (!string.IsNullOrEmpty(_namespace))
+                fileName = _namespace + "." + fileName;
+            return Path.Combine(_resourceDir, fileName) + ".json";
         }
 
         private string GetJsonFileContents<T>()

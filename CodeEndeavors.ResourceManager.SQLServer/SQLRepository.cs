@@ -16,6 +16,7 @@ namespace CodeEndeavors.ResourceManager.SQLServer
         private static bool _initialized = false;
 
         private string _cacheName;
+        private string _namespace = null;
         //private bool _useFileMonitor;
         private int _auditHistorySize;
         private bool _enableAudit;
@@ -36,6 +37,7 @@ namespace CodeEndeavors.ResourceManager.SQLServer
             _cacheConnection = cacheConnection;
             _dataConnection = _connection.GetSetting("dataConnection", "");
             _cacheName = _cacheConnection.GetSetting("cacheName", "");
+            _namespace = _connection.GetSetting<string>("namespace", null);
             //_useFileMonitor = _connection.GetSetting("useFileMonitor", false);
             _auditHistorySize = _connection.GetSetting("auditHistorySize", 10);
             _enableAudit = _auditHistorySize > 0;    
@@ -100,11 +102,27 @@ namespace CodeEndeavors.ResourceManager.SQLServer
                 using (var connection = new SqlConnection(_dataConnection))
                 {
                     connection.Open();
-                    var data = getData("SELECT * FROM Resource WHERE ResourceType = @resourceType", new Dictionary<string, object> { { "@resourceType", resourceType } }, connection);
+                    var parameters = new Dictionary<string, object> { { "@resourceType", resourceType } };
+                    var sql = "SELECT * FROM Resource WHERE ResourceType = @resourceType";
+                    if (!string.IsNullOrEmpty(_namespace))
+                    {
+                        parameters["@namespace"] = _namespace;
+                        sql += " AND [Namespace] = @namespace";
+                    }
+                    
+                    var data = getData(sql, parameters, connection);
                     DataTable auditData = null;
                     if (_enableAudit)
                     {
-                        auditData = getData("SELECT ra.* FROM ResourceAudit ra JOIN Resource r ON ra.ResourceId = r.Id WHERE r.ResourceType = @resourceType", new Dictionary<string, object> { { "@resourceType", resourceType } }, connection);
+                        parameters = new Dictionary<string, object> { { "@resourceType", resourceType } };
+                        sql = "SELECT ra.* FROM ResourceAudit ra JOIN Resource r ON ra.ResourceId = r.Id WHERE r.ResourceType = @resourceType";
+
+                        if (!string.IsNullOrEmpty(_namespace))
+                        {
+                            parameters["@namespace"] = _namespace;
+                            sql += " AND r.[Namespace] = @namespace";
+                        }
+                        auditData = getData(sql, parameters, connection);
                     }
 
                     foreach (DataRow dr in data.Rows)
@@ -117,7 +135,7 @@ namespace CodeEndeavors.ResourceManager.SQLServer
                 return new ConcurrentDictionary<string, DomainObjects.Resource<T>>(resource.ToDictionary(r => r.Id));
             };
 
-            var dict = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry(_cacheName, resourceType, getDelegate, null); //getMonitorOptions(fileName));
+            var dict = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry<ConcurrentDictionary<string, DomainObjects.Resource<T>>>(_cacheName, resourceType, getDelegate, null); //getMonitorOptions(fileName));
             _pendingDict[resourceType] = dict;
             return dict;
         }
@@ -130,6 +148,7 @@ namespace CodeEndeavors.ResourceManager.SQLServer
             if (string.IsNullOrEmpty(item.Id))
             {
                 item.Id = Guid.NewGuid().ToString();    //todo: use another resource for this...
+                item.Namespace = _namespace;
                 try
                 {
                     ((dynamic)item.Data).Id = item.Id;  //todo: require Id on object?
@@ -181,7 +200,17 @@ namespace CodeEndeavors.ResourceManager.SQLServer
             using (var connection = new SqlConnection(_dataConnection))
             {
                 connection.Open();
-                executeSql("DELETE FROM ResourceAudit WHERE ResourceId IN (SELECT ResourceId FROM Resource WHERE ResourceType = @ResourceType); DELETE FROM Resource WHERE ResourceType = @ResourceType", new Dictionary<string, object>() { { "@ResourceType", resourceType } }, connection);
+                
+                var parameters = new Dictionary<string, object>() { { "@ResourceType", resourceType } };
+                var sql = "DELETE FROM ResourceAudit WHERE ResourceId IN (SELECT ResourceId FROM Resource WHERE ResourceType = @ResourceType); DELETE FROM Resource WHERE ResourceType = @ResourceType";
+
+                if (!string.IsNullOrEmpty(_namespace))
+                {
+                    parameters["@namespace"] = _namespace;
+                    sql += " AND [Namespace] = @namespace";
+                }
+
+                executeSql(sql, parameters, connection);
             }
             expireCacheEntry(resourceType);
             DataTable dt;
@@ -213,6 +242,7 @@ namespace CodeEndeavors.ResourceManager.SQLServer
             ret.Id = getDataValue(dr, "Id", "");
             ret.Key = getDataValue<string>(dr, "Key", null);
             ret.Type = getDataValue<string>(dr, "Type", null);
+            ret.Namespace = getDataValue<string>(dr, "Namespace", null);
             ret.EffectiveDate = getDataValue<DateTimeOffset?>(dr, "EffectiveDate", null);
             ret.ExpirationDate = getDataValue<DateTimeOffset?>(dr, "ExpirationDate", null);
             var json = getDataValue<string>(dr, "Data", null);
@@ -245,6 +275,7 @@ namespace CodeEndeavors.ResourceManager.SQLServer
             dr["ResourceType"] = getResourceType<T>();
             dr["Key"] = getParameterValue(resource.Key, DBNull.Value);
             dr["Type"] = getParameterValue(resource.Type, DBNull.Value);
+            dr["Namespace"] = getParameterValue(resource.Namespace, DBNull.Value);
             dr["Sequence"] = getParameterValue(resource.Sequence, DBNull.Value);
             dr["EffectiveDate"] = getParameterValue(resource.EffectiveDate, DBNull.Value);
             dr["ExpirationDate"] = getParameterValue(resource.ExpirationDate, DBNull.Value);
@@ -283,6 +314,7 @@ namespace CodeEndeavors.ResourceManager.SQLServer
             dt.Columns.Add(new DataColumn("ResourceType", typeof(string)));
             dt.Columns.Add(new DataColumn("Key", typeof(string)));
             dt.Columns.Add(new DataColumn("Type", typeof(string)));
+            dt.Columns.Add(new DataColumn("Namespace", typeof(string)));
             dt.Columns.Add(new DataColumn("Sequence", typeof(int)));
             dt.Columns.Add(new DataColumn("EffectiveDate", typeof(DateTimeOffset)));
             dt.Columns.Add(new DataColumn("ExpirationDate", typeof(DateTimeOffset)));
@@ -331,10 +363,10 @@ namespace CodeEndeavors.ResourceManager.SQLServer
             using (var connection = new SqlConnection(_dataConnection))
             {
                 var adapter = new SqlDataAdapter();
-                adapter.InsertCommand = new SqlCommand("INSERT Resource (Id, ResourceType, Type, [Key], Sequence, EffectiveDate, ExpirationDate, Scope, Data) VALUES (@Id, @ResourceType, @Type, @Key, @Sequence, @EffectiveDate, @ExpirationDate, @Scope, @Data)", connection);
+                adapter.InsertCommand = new SqlCommand("INSERT Resource (Id, ResourceType, Type, [Namespace], [Key], Sequence, EffectiveDate, ExpirationDate, Scope, Data) VALUES (@Id, @ResourceType, @Type, @Namespace, @Key, @Sequence, @EffectiveDate, @ExpirationDate, @Scope, @Data)", connection);
                 adapter.InsertCommand.Parameters.AddRange(getResourceParameters().ToArray());
                 adapter.InsertCommand.UpdatedRowSource = UpdateRowSource.None;
-                adapter.UpdateCommand = new SqlCommand("UPDATE Resource SET ResourceType = @ResourceType, Type = @Type, [Key] = @Key, Sequence = @Sequence, EffectiveDate = @EffectiveDate, ExpirationDate = @ExpirationDate, Scope = @Scope, Data = @Data WHERE Id = @Id", connection);
+                adapter.UpdateCommand = new SqlCommand("UPDATE Resource SET ResourceType = @ResourceType, Type = @Type, [Namespace] = @Namespace, [Key] = @Key, Sequence = @Sequence, EffectiveDate = @EffectiveDate, ExpirationDate = @ExpirationDate, Scope = @Scope, Data = @Data WHERE Id = @Id", connection);
                 adapter.UpdateCommand.Parameters.AddRange(getResourceParameters().ToArray());
                 adapter.UpdateCommand.UpdatedRowSource = UpdateRowSource.None;
                 adapter.DeleteCommand = new SqlCommand("DELETE FROM ResourceAudit WHERE ResourceId = @Id; DELETE FROM Resource WHERE Id = @Id", connection);
@@ -378,6 +410,7 @@ namespace CodeEndeavors.ResourceManager.SQLServer
                     new SqlParameter("@ResourceType", SqlDbType.VarChar, 200, "ResourceType"),
                     new SqlParameter("@Key", SqlDbType.VarChar, 200, "Key"),
                     new SqlParameter("@Type", SqlDbType.VarChar, 200, "Type"),
+                    new SqlParameter("@Namespace", SqlDbType.VarChar, 200, "Namespace"),
                     new SqlParameter("@Sequence", SqlDbType.Int, 4, "Sequence"),
                     new SqlParameter("@EffectiveDate", SqlDbType.DateTimeOffset, 8, "EffectiveDate"),
                     new SqlParameter("@ExpirationDate", SqlDbType.DateTimeOffset, 8, "ExpirationDate"),
@@ -469,6 +502,10 @@ namespace CodeEndeavors.ResourceManager.SQLServer
                 {
                     "if not exists (SELECT 1 FROM sysobjects where name = 'Resource') BEGIN CREATE TABLE Resource(Id varchar(100) NOT NULL, ResourceType varchar(200) NULL, [Key] varchar(200) NULL,Type varchar(200) NULL,Sequence int NULL,EffectiveDate datetimeoffset(7) NULL,ExpirationDate datetimeoffset(7) NULL,Scope nvarchar(500) NULL,Data ntext NULL)  ON [PRIMARY] TEXTIMAGE_ON [PRIMARY] ALTER TABLE Resource ADD CONSTRAINT PK_Resource PRIMARY KEY CLUSTERED ( Id ) CREATE NONCLUSTERED INDEX IX_ResourceType ON Resource (ResourceType) END",
                     "if not exists (SELECT 1 FROM sysobjects where name = 'ResourceAudit') BEGIN CREATE TABLE [ResourceAudit]([Id] [int] IDENTITY(1,1) NOT NULL, [ResourceId] varchar(100) NOT NULL, [UserId] [varchar](100) NULL, [AuditDate] [datetimeoffset](7) NOT NULL, [Action] [varchar](20) NOT NULL, CONSTRAINT [PK_ResourceAudit] PRIMARY KEY CLUSTERED (	[Id] ASC )) ALTER TABLE [dbo].[ResourceAudit]  WITH CHECK ADD  CONSTRAINT [FK_ResourceAudit_Resource] FOREIGN KEY([ResourceId]) REFERENCES [dbo].[Resource] ([Id]) ALTER TABLE [dbo].[ResourceAudit] CHECK CONSTRAINT [FK_ResourceAudit_Resource] END"
+                }},
+                {2, new List<string>()  //version 2 scripts
+                {
+                    "IF NOT EXISTS(SELECT * from syscolumns where name = 'Namespace' and id = (select id from sysobjects where name = 'Resource' and xtype = 'U')) BEGIN ALTER TABLE Resource ADD [Namespace] varchar(200) NULL END"
                 }}
             };
 
