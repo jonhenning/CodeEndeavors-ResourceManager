@@ -5,6 +5,7 @@
         <ProjectFullName>CodeEndeavors.Services.ResourceManager</ProjectFullName>
         <Deploy>1</Deploy>
         <InternalizedDlls></InternalizedDlls>
+        <ProvisioningDir></ProvisioningDir>
     </PropertyGroup>
     
     <PropertyGroup>
@@ -19,6 +20,7 @@
     </PropertyGroup>
     <ItemGroup>
       <ServiceHostBins Include="$(ServiceHostBin)" />
+      <ProvisioningDirs Include="$(ProvisioningDir)" />
     </ItemGroup>
 
   <Import Project="$(CommonLibDir)\MSBuildTargets\MSBuild.Community.Tasks.Targets" Condition="Exists('$(CommonLibDir)\MSBuildTargets\MSBuild.Community.Tasks.Targets')"/>
@@ -56,6 +58,8 @@
 
       <Copy SourceFiles="$(RedistDir)\$(ProjectFullName).zip" DestinationFolder="%(ServiceHostBins.FullPath)" SkipUnchangedFiles="false" />
       <Unzip TargetDirectory="%(ServiceHostBins.FullPath)" ZipFileName="%(ServiceHostBins.FullPath)\$(ProjectFullName).zip" />
+      
+      <Copy SourceFiles="$(RedistDir)\$(ProjectFullName).zip;" DestinationFolder="%(ProvisioningDirs.FullPath)" Condition="$(ProvisioningDir) != ''" />
     </Target>
 
 </Project>
