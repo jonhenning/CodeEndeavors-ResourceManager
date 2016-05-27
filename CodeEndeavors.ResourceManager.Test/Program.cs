@@ -14,9 +14,9 @@ namespace CodeEndeavors.ResourceManager.Test
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-            var connection = "{ type:'File', resourceDir:'~/App_Data/FileDb', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }";
+            //var connection = "{ type:'File', resourceDir:'~/App_Data/FileDb', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }";
             //var connection = "{ type:'CodeEndeavors.ResourceManager.SQLServer.SQLRepository', namespace: 'TEST', dataConnection: 'Data Source=(local);Initial Catalog=Videre.ResourceManager;Persist Security Info=True;User ID=resourcemanager;Password=password', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }";
-            //var connection = "{ type:'CodeEndeavors.ResourceManager.ServiceHost.ServiceHostRepository', url: 'http://resourcemanager.servicehost.dev', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }";
+            var connection = "{ type:'CodeEndeavors.ResourceManager.ServiceHost.ServiceHostRepository', namespace: 'TEST', url: 'http://resourcemanager.servicehost.dev', cacheConnection: {cacheName: 'MyCache', cacheType: 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache'} }";
 
             using (var repo = new ResourceRepository(connection))
             {

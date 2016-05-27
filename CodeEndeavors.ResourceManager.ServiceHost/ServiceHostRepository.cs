@@ -18,6 +18,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
         private Dictionary<string, object> _cacheConnection = null;
 
         private string _cacheName;
+        private string _namespace;
         //private bool _useFileMonitor;
         private int _auditHistorySize;
         private bool _enableAudit;
@@ -37,6 +38,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
             _connection = connection;
             _cacheConnection = cacheConnection;
             _cacheName = _cacheConnection.GetSetting("cacheName", "");
+            _namespace = _connection.GetSetting("namespace", "");
             //_useFileMonitor = _connection.GetSetting("useFileMonitor", false);
             _auditHistorySize = _connection.GetSetting("auditHistorySize", 10); //todo: how is this getting passed up the chain?
             _enableAudit = _auditHistorySize > 0;
@@ -108,7 +110,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
             Func<ConcurrentDictionary<string, DomainObjects.Resource<T>>> getDelegate = delegate()
             {
                 var resource = new List<DomainObjects.Resource<T>>();
-                var sr = RepositoryService.Resolve().GetResources(resourceType, _enableAudit);
+                var sr = RepositoryService.Resolve().GetResources(resourceType, _enableAudit, _namespace);
 
                 if (sr.Success)
                 {
@@ -165,7 +167,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
                     if (_pendingAuditUpdates.ContainsKey(resourceType))
                         _pendingResourceUpdates[resourceType].ForEach(r => r.ResourceAudits = _pendingAuditUpdates[resourceType].Where(a => a.ResourceId == r.Id).ToList());
 
-                    var sr = RepositoryService.Resolve().SaveResources(_pendingResourceUpdates[resourceType]);
+                    var sr = RepositoryService.Resolve().SaveResources(_pendingResourceUpdates[resourceType], _namespace);
                     if (!sr.Success)
                         throw new Exception(sr.ToString());
 
@@ -188,7 +190,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
         public void DeleteAll<T>()
         {
             var resourceType = getResourceType<T>();
-            var sr = RepositoryService.Resolve().DeleteAll(resourceType);
+            var sr = RepositoryService.Resolve().DeleteAll(resourceType, "", _namespace);
             if (sr.Success)
             {
                 expireCacheEntry(resourceType);
@@ -254,6 +256,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
                     Key = resource.Key,
                     Type = resource.Type,
                     Sequence = resource.Sequence,
+
                     EffectiveDate = resource.EffectiveDate,
                     ExpirationDate = resource.ExpirationDate,
                     Data = resource.Data != null ? resource.Data.ToJson(false, "db") : null,

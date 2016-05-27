@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>CodeEndeavors.ResourceManager.ServiceHost</id>
-	<title>Code Endeavors Resource Manager (ServiceHost)</title>
+        <title>Code Endeavors Resource Manager (ServiceHost)</title>
         <version>2.0.2</version>
         <authors>Jon Henning</authors>
         <owners>Code Endeavores Inc.</owners>
@@ -13,12 +13,12 @@
         <releaseNotes />
         <dependencies>
             <group>
-                <dependency id="CodeEndeavors.ResourceManager" version="2.0.15" />
-		<dependency id="CodeEndeavors.Services.ResourceManager.ClientX" version="1.0.4" />
+                <dependency id="CodeEndeavors.ResourceManager" version="2.0.21" />
+                <dependency id="CodeEndeavors.Services.ResourceManager.ClientX" version="1.0.8" />
             </group>
         </dependencies>
     </metadata>
     <files>
-        <file src="CodeEndeavors.ResourceManager.ServiceHost.dll" target="lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll" />      
+        <file src="CodeEndeavors.ResourceManager.ServiceHost.dll" target="lib\net45\CodeEndeavors.ResourceManager.ServiceHost.dll" />
     </files>
 </package>
