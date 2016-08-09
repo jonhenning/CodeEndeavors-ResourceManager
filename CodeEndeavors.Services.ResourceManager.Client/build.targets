@@ -5,7 +5,7 @@
     <ProjectFullName>CodeEndeavors.Services.ResourceManager</ProjectFullName>
     <Deploy>0</Deploy>
     <DeployProxy>0</DeployProxy>
-    <InternalizedDlls>CodeEndeavors.ServiceHost.Common.dll</InternalizedDlls>
+    <InternalizedDlls></InternalizedDlls>
   </PropertyGroup>
 
   <PropertyGroup>

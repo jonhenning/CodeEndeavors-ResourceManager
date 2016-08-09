@@ -1,4 +1,6 @@
 ﻿using CodeEndeavors.Extensions;
+using CodeEndeavors.ServiceHost.Common.Client;
+using CodeEndeavors.ServiceHost.Common.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace CodeEndeavors.Services.ResourceManager.Test
 
         private static Client.RepositoryService RepositoryService
         {
-            get { return Client.RepositoryService.Resolve(); }
+            get { return ServiceLocator.Resolve<Client.RepositoryService>(); }
         }
 
         static void Main(string[] args)
@@ -36,12 +38,14 @@ namespace CodeEndeavors.Services.ResourceManager.Test
             Console.WriteLine("Initializing Service ({0})", url);
             //Log.Configure("log4net.config", "SampleAppLogger");
 
-            Client.RepositoryService.Register(url, 600000);
+            ServiceLocator.Register<Client.RepositoryService>(url, 600000);
             RepositoryService.SetAquireUserIdDelegate(AquireUserId);
             RepositoryService.ConfigureLogging("Debug", (string level, string message) =>
                 {
-                    RecordMessage(string.Format("{0}:{1}", level, message));
+                    recordMessage(string.Format("{0}:{1}", level, message));
                 });
+
+            initializeCache();
 
             string command = "";
             while (command.ToLower() != "exit")
@@ -61,9 +65,14 @@ namespace CodeEndeavors.Services.ResourceManager.Test
                                 DoGetResources(commandParts);
                                 break;
                             }
+                        case "saveresources":
+                            {
+                                DoSaveResources(commandParts);
+                                break;
+                            }
                         default:
                             {
-                                RecordMessage("Unknown Command");
+                                recordMessage("Unknown Command");
                                 break;
                             }
                     }
@@ -76,7 +85,7 @@ namespace CodeEndeavors.Services.ResourceManager.Test
         }
 
 
-        private static Client.ClientCommandResult<List<DomainObjects.Resource>> DoGetResources(string[] commandParts)
+        private static void DoGetResources(string[] commandParts)
         {
             var resourceType = "Videre.Core.Models.Localization";
             var includeAudits = true;
@@ -87,12 +96,29 @@ namespace CodeEndeavors.Services.ResourceManager.Test
 
             var cr = RepositoryService.GetResources(resourceType, includeAudits);
             Console.WriteLine(cr.Data.ToJson(true));
-            return cr;
         }
 
-        private static void RecordMessage(string Message)
+        private static void DoSaveResources(string[] commandParts)
         {
-            Console.WriteLine(Message);
+            var resourceType = "Videre.Core.Models.Localization";
+            var includeAudits = true;
+            if (commandParts.Length > 1)
+                resourceType = commandParts[1];
+            if (commandParts.Length > 2)
+                includeAudits = bool.Parse(commandParts[2]);
+
+            var cr = RepositoryService.GetResources(resourceType, includeAudits);
+            var crSave = RepositoryService.SaveResources(cr.Data);
+        }
+
+        private static void recordMessage(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        private static void recordMessage(string message, params object[] args)
+        {
+            recordMessage(string.Format(message, args));
         }
 
         public static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -102,5 +128,37 @@ namespace CodeEndeavors.Services.ResourceManager.Test
                 return Assembly.LoadWithPartialName(assemblyName.Name);
             return null;
         }
+
+        private static void initializeCache()
+        {
+            var clientId = string.Format("{0}:{1}", Environment.MachineName, System.AppDomain.CurrentDomain.FriendlyName);
+            var cacheConnection = "";
+            var cacheName = "";
+            var cacheServer = "";
+
+            Console.WriteLine("Enter CacheType:");
+            Console.WriteLine("0)  InMemory (default)");
+            Console.WriteLine("1)  Local Redis");
+            Console.WriteLine("2)  SJCACHE Redis");
+            Console.WriteLine("3)  None");
+            var cacheTypeNum = Console.ReadLine();
+            if (cacheTypeNum == "1" || cacheTypeNum == "2")
+            {
+                cacheName = "Redis";
+                cacheServer = cacheTypeNum == "1" ? "127.0.0.1" : "10.192.1.95:6379";
+                //cacheConnection = string.Format("{{'cacheType': 'CodeEndeavors.Distributed.Cache.Client.Redis.RedisCache', 'clientId': '{0}', 'server': '{1},syncTimeout=10000', 'absoluteExpiration': '\"00:10:00\"'}}", clientId, cacheServer);
+                cacheConnection = string.Format("{{'cacheType': 'CodeEndeavors.Distributed.Cache.Client.Redis.RedisCache', 'clientId': '{0}', 'server': '{1},syncTimeout=10000'}}", clientId, cacheServer);
+            }
+            else if (cacheTypeNum == "3") { }
+            else
+            {
+                cacheName = "InMemory";
+                cacheConnection = string.Format("{{'cacheType': 'CodeEndeavors.Distributed.Cache.Client.InMemory.InMemoryCache', 'clientId': '{0}', 'absoluteExpiration': '\"00:10:00\"' }}", clientId);
+            }
+
+            recordMessage("ConfigureCache({0}, {1})", cacheName, cacheConnection);
+            RepositoryService.ConfigureCache(cacheName, cacheConnection);
+        }
+
     }
 }
