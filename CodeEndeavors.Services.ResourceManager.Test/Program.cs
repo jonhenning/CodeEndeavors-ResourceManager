@@ -109,6 +109,7 @@ namespace CodeEndeavors.Services.ResourceManager.Test
 
             var cr = RepositoryService.GetResources(resourceType, includeAudits);
             var crSave = RepositoryService.SaveResources(cr.Data);
+            Console.WriteLine(crSave.Data.ToJson(true));
         }
 
         private static void recordMessage(string message)

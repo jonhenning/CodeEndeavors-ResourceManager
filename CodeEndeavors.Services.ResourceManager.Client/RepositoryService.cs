@@ -54,8 +54,8 @@ namespace CodeEndeavors.Services.ResourceManager.Client
             {
                 resources.ForEach(r => r.Namespace = ns);
                 result.ReportResult(_service.SaveResources(resources), true);
-                var resourceType = resources.Select(r => r.ResourceType).FirstOrDefault();
-                if (!string.IsNullOrEmpty(resourceType))
+                var resourceTypes = resources.Select(r => r.ResourceType).Distinct().ToList();
+                foreach (var resourceType in resourceTypes)
                     CacheService.ExpireCacheDependencies(_cacheName, "Table", resourceType);
             });
         }

@@ -9,6 +9,7 @@ using DomainObjects = CodeEndeavors.ResourceManager.DomainObjects;
 using System.Collections.Concurrent;
 using CodeEndeavors.ResourceManager;
 using CodeEndeavors.Services.ResourceManager.Client;
+using CodeEndeavors.ServiceHost.Common.Services;
 
 namespace CodeEndeavors.ResourceManager.ServiceHost
 {
@@ -17,7 +18,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
         private Dictionary<string, object> _connection = null;
         private Dictionary<string, object> _cacheConnection = null;
 
-        private string _cacheName;
+        //private string _cacheName;
         private string _namespace;
         //private bool _useFileMonitor;
         private int _auditHistorySize;
@@ -37,7 +38,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
         {
             _connection = connection;
             _cacheConnection = cacheConnection;
-            _cacheName = _cacheConnection.GetSetting("cacheName", "");
+            var cacheName = _cacheConnection.GetSetting("cacheName", "");
             _namespace = _connection.GetSetting("namespace", "");
             //_useFileMonitor = _connection.GetSetting("useFileMonitor", false);
             _auditHistorySize = _connection.GetSetting("auditHistorySize", 10); //todo: how is this getting passed up the chain?
@@ -54,16 +55,17 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
                 throw new Exception("url key not found in connection");
 
             if (authenticationType != "None")
-                RepositoryService.Register(url, requestTimeout, httpUser, httpPassword, authenticationType);
+                ServiceLocator.Register<RepositoryService>(url, requestTimeout, httpUser, httpPassword, authenticationType.ToType<AuthenticationType>());
             else
-                RepositoryService.Register(url, requestTimeout);
-            
+                ServiceLocator.Register<RepositoryService>(url, requestTimeout);
+
             //todo: setaquireuserid?!?!?!
-            RepositoryService.Resolve().SetAquireUserIdDelegate(() => { return "5"; }); //FIX;
-            RepositoryService.Resolve().ConfigureLogging(logLevel, (string level, string message) =>
+            ServiceLocator.Resolve<RepositoryService>().SetAquireUserIdDelegate(() => { return "5"; }); //FIX;
+            ServiceLocator.Resolve<RepositoryService>().ConfigureLogging(logLevel, (string level, string message) =>
                 {
                     Logging.Log(Logging.LoggingLevel.Minimal, message); //todo: map log levels
                 });
+            ServiceLocator.Resolve<RepositoryService>().ConfigureCache(cacheName, _cacheConnection.ToJson());
 
             Logging.Log(Logging.LoggingLevel.Minimal, "ServiceHost Repository Initialized");
         }
@@ -125,7 +127,8 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
                     throw new Exception(sr.ToString());
             };
 
-            var dict = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry(_cacheName, resourceType, getDelegate, null); //getMonitorOptions(fileName));
+            //var dict = CodeEndeavors.Distributed.Cache.Client.Service.GetCacheEntry(_cacheName, resourceType, getDelegate, null); //getMonitorOptions(fileName));
+            var dict = getDelegate();
             _pendingDict[resourceType] = dict;
             return dict;
         }
@@ -171,7 +174,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
                     if (!sr.Success)
                         throw new Exception(sr.ToString());
 
-                    expireCacheEntry(resourceType);
+                    //expireCacheEntry(resourceType);
                 }
             }
             _pendingResourceUpdates = new ConcurrentDictionary<string, List<RepositoryDomainObjects.Resource>>();
@@ -193,7 +196,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
             var sr = RepositoryService.Resolve().DeleteAll(resourceType, "", _namespace);
             if (sr.Success)
             {
-                expireCacheEntry(resourceType);
+                //expireCacheEntry(resourceType);
                 List<RepositoryDomainObjects.Resource> res;
                 List<RepositoryDomainObjects.ResourceAudit> resAudit;
                 _pendingResourceUpdates.TryRemove(resourceType, out res);
@@ -208,10 +211,10 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
             return typeof(T).ToString();
         }
 
-        private void expireCacheEntry(string key)
-        {
-            CodeEndeavors.Distributed.Cache.Client.Service.ExpireCacheEntry(_cacheName, key);
-        }
+        //private void expireCacheEntry(string key)
+        //{
+        //    CodeEndeavors.Distributed.Cache.Client.Service.ExpireCacheEntry(_cacheName, key);
+        //}
 
         private object getMonitorOptions(string fileName)
         {
