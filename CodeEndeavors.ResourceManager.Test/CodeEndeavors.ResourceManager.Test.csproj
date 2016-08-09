@@ -61,6 +61,10 @@
     <Reference Include="CodeEndeavors.ResourceManager.SQLServer">
       <HintPath>..\redist\CodeEndeavors.ResourceManager.SQLServer.dll</HintPath>
     </Reference>
+    <Reference Include="CodeEndeavors.ServiceHost.Common, Version=2.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodeEndeavors.ServiceHost.Common.2.0.42\lib\4.5\CodeEndeavors.ServiceHost.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="CodeEndeavors.Services.ResourceManager.ClientX">
       <HintPath>..\redist\CodeEndeavors.Services.ResourceManager.ClientX.dll</HintPath>
     </Reference>
