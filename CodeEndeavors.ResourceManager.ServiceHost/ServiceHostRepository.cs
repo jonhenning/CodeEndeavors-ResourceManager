@@ -158,7 +158,8 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
                 _pendingAuditUpdates[resourceType] = new List<RepositoryDomainObjects.ResourceAudit>();
 
             _pendingResourceUpdates[resourceType].Add(toRepositoryResource(item, rowState));
-            _pendingAuditUpdates[resourceType].Add(toRepositoryAudit(item.Id, item.Audit.FirstOrDefault()));
+            if (item.Audit.Count > 0)
+                _pendingAuditUpdates[resourceType].Add(toRepositoryAudit(item.Id, item.Audit.FirstOrDefault()));
         }
 
         public void Save()
