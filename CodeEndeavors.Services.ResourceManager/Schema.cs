@@ -97,6 +97,10 @@ namespace CodeEndeavors.Services.ResourceManager
                 {2, new List<string>()  //version 2 scripts
                 {
                     "IF NOT EXISTS(SELECT * from syscolumns where name = 'Namespace' and id = (select id from sysobjects where name = 'Resource' and xtype = 'U')) BEGIN ALTER TABLE Resource ADD [Namespace] varchar(200) NULL END"
+                }},
+                {3, new List<string>()  //version 3 scripts
+                {
+                    "IF EXISTS(SELECT * from syscolumns where name = 'Data' and xtype = 99 and id = (select id from sysobjects where name = 'Resource' and xtype = 'U')) BEGIN ALTER TABLE [dbo].[Resource] ALTER COLUMN [Data] NVARCHAR(MAX)  NULL; UPDATE [dbo].[Resource] SET [Data] = [Data]; END"
                 }}
             };
 
