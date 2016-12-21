@@ -42,8 +42,18 @@ namespace CodeEndeavors.ResourceManager
             if (!string.IsNullOrEmpty(_clientId))
                 _clientId = _connectionDict.GetSetting("clientId", cacheConnection.GetSetting("clientId", Guid.NewGuid().ToString()));
 
-            Distributed.Cache.Client.Service.RegisterCache(cacheName, cacheConnection.ToJson());
-            _connectionDict["cacheName"] = cacheName;
+            try
+            {
+                Distributed.Cache.Client.Service.RegisterCache(cacheName, cacheConnection.ToJson());
+                _connectionDict["cacheName"] = cacheName;
+                Logging.Log(Logging.LoggingLevel.Minimal, "Cache {0} Configured: {1}", cacheName, cacheConnection.ToJson());
+            }
+            catch (Exception ex)
+            {
+                Logging.Log(Logging.LoggingLevel.Minimal, ex.Message);
+                Logging.Log(Logging.LoggingLevel.Minimal, "Using default cache");
+                cacheConnection = new Dictionary<string, object>();
+            }
 
             _repository = type.GetInstance<IRepository>();
             _repository.Initialize(_connectionDict, cacheConnection);
