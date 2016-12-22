@@ -55,14 +55,14 @@ namespace CodeEndeavors.Services.ResourceManager.Client
                         serviceCalled = true;
                         var sr = codeFunc.Invoke();
                         if (sr.Success)
-                            return sr;
+                            return sr.Data;
                         else
                             throw new Exception(sr.ToString());
                     });
                     if (serviceCalled)
                         result.ReportResult(serviceResult, true);
                     else
-                        result.ReportResult(serviceResult.Data, true);
+                        result.ReportResult(serviceResult, true);
                 });
             }
             else
@@ -74,6 +74,8 @@ namespace CodeEndeavors.Services.ResourceManager.Client
             return Execute<TData>(cacheName, cacheTypeDependency, null, cacheTypeDependencyKeys, cacheKey, cacheItemObject, codeFunc);
         }
 
+
+        //DO NOT CACHE SERVICERESULT, WE NEED TO INSERT A NEW RESULT
         public static ClientCommandResult<TData> Execute<TData>(string cacheName, string cacheTypeDependency, TimeSpan? absoluteExpiration, List<string> cacheTypeDependencyKeys, string cacheKey, object cacheItemObject, Func<ServiceResult<TData>> codeFunc)
         {
             if (!string.IsNullOrEmpty(cacheName))
@@ -86,7 +88,7 @@ namespace CodeEndeavors.Services.ResourceManager.Client
                         serviceCalled = true;
                         var sr = codeFunc.Invoke();
                         if (sr.Success)
-                            return sr;
+                            return sr.Data;
                         else
                             throw new Exception(sr.ToString());
                     });
@@ -100,12 +102,25 @@ namespace CodeEndeavors.Services.ResourceManager.Client
                         result.ReportResult(serviceResult, true);
                     }
                     else
-                        result.ReportResult(serviceResult.Data, true);
+                        result.ReportResult(serviceResult, true);
                 });
             }
             else
                 return ClientCommandResult<TData>.Execute(codeFunc);
         }
+
+        public static bool SetCacheEntry<TData>(string cacheName, string cacheKey, TimeSpan? absoluteExpiration, object cacheItemObject, TData data)
+        {
+            if (!string.IsNullOrEmpty(cacheName))
+            {
+                var itemKey = ToMD5(cacheItemObject.ToJson());
+                CacheService.SetCacheEntry(cacheName, absoluteExpiration, cacheKey, itemKey, data, null);
+                return true;
+            }
+            else
+                return true;
+        }
+
 
         private static string ToMD5(string input)
         {

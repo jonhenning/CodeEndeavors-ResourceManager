@@ -44,6 +44,17 @@ namespace CodeEndeavors.Services.ResourceManager.Client
             });
         }
 
+        public bool SetCacheEntry<TData>(string cacheKey, TimeSpan? absoluteExpiration, object cacheItemObject, TData data)
+        {
+            if (!string.IsNullOrEmpty(_cacheName))
+            {
+                Cache.SetCacheEntry(_cacheName, cacheKey, absoluteExpiration, cacheItemObject, data);
+                return true;
+            }
+            else
+                return true;
+        }
+
         public ClientCommandResult<bool> SaveResources(List<DomainObjects.Resource> resources)
         {
             return SaveResources(resources, null);
