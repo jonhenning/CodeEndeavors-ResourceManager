@@ -150,7 +150,12 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
             }
 
             var dict = AllDict<T>();
-            dict[item.Id] = item;
+            dict[item.Id] = item;   //item is inserted into "local" cache here, we need to add it to Redis if we have it!
+
+            //_cacheName, "Table", TimeSpan.FromHours(1), new List<string> { resourceType }, resourceType, resourceType
+
+            //Storing updated dictionary directly before update!!!!!
+            RepositoryService.Resolve().SetCacheEntry(resourceType, null, resourceType, dict.Values.ToList());
 
             if (!_pendingResourceUpdates.ContainsKey(resourceType))
                 _pendingResourceUpdates[resourceType] = new List<RepositoryDomainObjects.Resource>();

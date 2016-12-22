@@ -121,8 +121,8 @@ namespace CodeEndeavors.ResourceManager.File
                 }
                 catch { }
             }
-            var dict = AllDict<T>();
-            dict[item.Id] = item;
+            var dict = AllDict<T>();    
+            dict[item.Id] = item;   //item is inserted into cache here
 
             Logging.Log(Logging.LoggingLevel.Detailed, "Stored {0}:{1} in _pendingDict", typeof(T).Name, item.Id);
 
