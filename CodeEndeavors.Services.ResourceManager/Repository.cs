@@ -37,6 +37,9 @@ namespace CodeEndeavors.Services.ResourceManager
                         resources.ForEach(r => r.ResourceAudits = audits.Where(a => a.ResourceId == r.Id).ToList());
                     }
                     result.ReportResult(resources, true);
+
+                    Logging.Info("Retrieved {0} {1}(s)", resources.Count, resourceType);
+
                 }
             });
         }
@@ -81,6 +84,8 @@ namespace CodeEndeavors.Services.ResourceManager
                     }
                     db.SaveChanges();
                     result.ReportResult(true, true);
+
+                    Logging.Info("Saved {0} resources(s)", resources.Count);
                 }
             });
         }
@@ -100,6 +105,9 @@ namespace CodeEndeavors.Services.ResourceManager
                         db.Resources.Remove(resource);
                     db.SaveChanges();
                     result.ReportResult(true, true);
+
+                    Logging.Info("Deleted {0} {1}(s)", resources.Count, resourceType);
+
                 }
             });
         }
