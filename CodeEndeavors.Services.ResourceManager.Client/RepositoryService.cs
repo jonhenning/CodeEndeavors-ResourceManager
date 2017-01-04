@@ -38,7 +38,7 @@ namespace CodeEndeavors.Services.ResourceManager.Client
         }
         public ClientCommandResult<List<DomainObjects.Resource>> GetResources(string resourceType, bool includeAudit, string ns)
         {
-            return Cache.Execute<List<DomainObjects.Resource>>(_cacheName, "Table", TimeSpan.FromHours(1), new List<string> { resourceType }, resourceType, resourceType, () =>
+            return Cache.Execute<List<DomainObjects.Resource>>(_cacheName, "Table", null, new List<string> { resourceType }, resourceType, resourceType, () =>
             {
                 return _service.GetResources(resourceType, includeAudit, ns);
             });
