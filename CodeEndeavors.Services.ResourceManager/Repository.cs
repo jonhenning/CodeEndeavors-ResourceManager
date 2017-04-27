@@ -26,20 +26,23 @@ namespace CodeEndeavors.Services.ResourceManager
         {
             return this.ExecuteServiceResult<List<DomainObjects.Resource>>(result =>
             {
-                using (var db = new Data.resourcemanagerContext(_connection))
+                using (new OperationTimer("GetResources: " + resourceType))
                 {
-                    db.Configuration.ProxyCreationEnabled = false;
-                    var resources = db.Resources.Where(r => r.ResourceType.Equals(resourceType, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(ns) || r.Namespace.Equals(ns, StringComparison.InvariantCultureIgnoreCase))).AsNoTracking().ToList();
-                    if (includeAudit)
+                    using (var db = new Data.resourcemanagerContext(_connection))
                     {
-                        var ids = resources.Select(r => r.Id).ToList();
-                        var audits = db.ResourceAudits.Where(a => ids.Contains(a.ResourceId)).AsNoTracking().ToList();
-                        resources.ForEach(r => r.ResourceAudits = audits.Where(a => a.ResourceId == r.Id).ToList());
+                        db.Configuration.ProxyCreationEnabled = false;
+                        var resources = db.Resources.Where(r => r.ResourceType.Equals(resourceType, StringComparison.InvariantCultureIgnoreCase) && (string.IsNullOrEmpty(ns) || r.Namespace.Equals(ns, StringComparison.InvariantCultureIgnoreCase))).AsNoTracking().ToList();
+                        if (includeAudit)
+                        {
+                            var ids = resources.Select(r => r.Id).ToList();
+                            var audits = db.ResourceAudits.Where(a => ids.Contains(a.ResourceId)).AsNoTracking().ToList();
+                            resources.ForEach(r => r.ResourceAudits = audits.Where(a => a.ResourceId == r.Id).ToList());
+                        }
+                        result.ReportResult(resources, true);
+
+                        Logging.Info("Retrieved {0} {1}(s)", resources.Count, resourceType);
+
                     }
-                    result.ReportResult(resources, true);
-
-                    Logging.Info("Retrieved {0} {1}(s)", resources.Count, resourceType);
-
                 }
             });
         }
@@ -48,46 +51,50 @@ namespace CodeEndeavors.Services.ResourceManager
         {
             return this.ExecuteServiceResult<bool>(result =>
             {
-                using (var db = new Data.resourcemanagerContext(_connection))
+                using (new OperationTimer("SaveResources: " + resources.Count))
                 {
-                    var ids = resources.Where(r => !string.IsNullOrEmpty(r.Id)).Select(r => r.Id).ToList();
-                    var existingResources = db.Resources.Where(r => ids.Contains(r.Id)).ToList();
-
-                    foreach (var resource in resources)
+                    using (var db = new Data.resourcemanagerContext(_connection))
                     {
-                        if (resource.RowState == DomainObjects.RowStateEnum.Modified)
+                        var ids = resources.Where(r => !string.IsNullOrEmpty(r.Id)).Select(r => r.Id).ToList();
+                        var existingResources = db.Resources.Where(r => ids.Contains(r.Id)).ToList();
+
+                        foreach (var resource in resources)
                         {
-                            var existing = existingResources.Where(r => r.Id == resource.Id).FirstOrDefault();
-                            if (existing != null)
-                                db.Entry(existing).CurrentValues.SetValues(resource);
-                            else
+                            if (resource.RowState == DomainObjects.RowStateEnum.Modified)
+                            {
+                                var existing = existingResources.Where(r => r.Id == resource.Id).FirstOrDefault();
+                                if (existing != null)
+                                    db.Entry(existing).CurrentValues.SetValues(resource);
+                                else
+                                {
+                                    db.Resources.Add(resource);
+                                    existingResources.Add(resource);    //add this here as well, if it is updated later in batch
+                                }
+                            }
+                            else if (resource.RowState == DomainObjects.RowStateEnum.Added)
                             {
                                 db.Resources.Add(resource);
                                 existingResources.Add(resource);    //add this here as well, if it is updated later in batch
                             }
-                        }
-                        else if (resource.RowState == DomainObjects.RowStateEnum.Added)
-                        {
-                            db.Resources.Add(resource);
-                            existingResources.Add(resource);    //add this here as well, if it is updated later in batch
-                        }
-                        else if (resource.RowState == DomainObjects.RowStateEnum.Deleted)
-                        {
-                            var existing = existingResources.Where(r => r.Id == resource.Id).FirstOrDefault();
-                            var audits = db.ResourceAudits.Where(r => r.ResourceId == resource.Id).ToList();
-                            if (existing != null)
+                            else if (resource.RowState == DomainObjects.RowStateEnum.Deleted)
                             {
-                                audits.ForEach(a => db.ResourceAudits.Remove(a));
-                                db.Resources.Remove(existing);
+                                var existing = existingResources.Where(r => r.Id == resource.Id).FirstOrDefault();
+                                var audits = db.ResourceAudits.Where(r => r.ResourceId == resource.Id).ToList();
+                                if (existing != null)
+                                {
+                                    audits.ForEach(a => db.ResourceAudits.Remove(a));
+                                    db.Resources.Remove(existing);
+                                }
                             }
                         }
-                    }
-                    db.SaveChanges();
-                    result.ReportResult(true, true);
+                        db.SaveChanges();
+                        result.ReportResult(true, true);
 
-                    Logging.Info("Saved {0} resources(s)", resources.Count);
+                        Logging.Info("Saved {0} resources(s)", resources.Count);
+                    }
                 }
             });
+
         }
 
         public ServiceResult<bool> DeleteAll(string resourceType, string type, string ns)
