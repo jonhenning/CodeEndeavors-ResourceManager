@@ -61,7 +61,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
 
             //todo: setaquireuserid?!?!?!
             ServiceLocator.Resolve<RepositoryService>().SetAquireUserIdDelegate(() => { return "5"; }); //FIX;
-            ServiceLocator.Resolve<RepositoryService>().ConfigureLogging(logLevel, (string level, string message) =>
+            ServiceLocator.Resolve<RepositoryService>().ConfigureLogging("ResourceManager", logLevel, (string level, string message) =>
                 {
                     Logging.Log(Logging.LoggingLevel.Minimal, message); //todo: map log levels
                 });
