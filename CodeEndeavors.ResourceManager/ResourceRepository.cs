@@ -46,7 +46,7 @@ namespace CodeEndeavors.ResourceManager
             {
                 Distributed.Cache.Client.Service.RegisterCache(cacheName, cacheConnection.ToJson());
                 _connectionDict["cacheName"] = cacheName;
-                Logging.Log(Logging.LoggingLevel.Minimal, "Cache {0} Configured: {1}", cacheName, cacheConnection.ToJson());
+                //Logging.Log(Logging.LoggingLevel.Minimal, "Cache {0} Configured: {1}", cacheName, cacheConnection.ToJson());
             }
             catch (Exception ex)
             {

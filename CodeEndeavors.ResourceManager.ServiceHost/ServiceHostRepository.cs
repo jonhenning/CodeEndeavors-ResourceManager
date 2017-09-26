@@ -67,7 +67,7 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
                 });
             ServiceLocator.Resolve<RepositoryService>().ConfigureCache(cacheName, _cacheConnection.ToJson());
 
-            Logging.Log(Logging.LoggingLevel.Minimal, "ServiceHost Repository Initialized");
+            //Logging.Log(Logging.LoggingLevel.Minimal, "ServiceHost Repository Initialized");
         }
 
 
