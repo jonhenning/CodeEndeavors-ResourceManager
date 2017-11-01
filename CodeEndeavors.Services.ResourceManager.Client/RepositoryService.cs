@@ -44,6 +44,33 @@ namespace CodeEndeavors.Services.ResourceManager.Client
             });
         }
 
+        public bool SetResource(string resourceType, TimeSpan? absoluteExpiration, DomainObjects.Resource resource, string ns)
+        {
+            //we have one converted entry...  we need to store the entire set of entries...
+            //retrieve from cache, update/add resource, and re-set
+            var resources = GetResources(resourceType, false, ns);
+            var found = false;
+            foreach (var r in resources.Data)
+            {
+                if (r.Id == resource.Id)
+                {
+                    r.Data = resource.Data;
+                    r.Key = resource.Key;
+                    r.Type = resource.Type;
+                    r.EffectiveDate = resource.EffectiveDate;
+                    r.ExpirationDate = resource.ExpirationDate;
+                    r.Scope = resource.Scope;
+                    r.Sequence = resource.Sequence;
+                    r.RowState = resource.RowState;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+                resources.Data.Add(resource);
+            return SetCacheEntry(resourceType, null, resourceType, resources.Data);
+        }
+
         public bool SetCacheEntry<TData>(string cacheKey, TimeSpan? absoluteExpiration, object cacheItemObject, TData data)
         {
             if (!string.IsNullOrEmpty(_cacheName))
