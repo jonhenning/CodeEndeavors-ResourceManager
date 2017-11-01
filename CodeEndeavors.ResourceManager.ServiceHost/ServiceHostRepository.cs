@@ -156,7 +156,8 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
 
             //Storing updated dictionary directly before update!!!!!
             //we cache the DomainObjects.Resource, not the direct object
-            RepositoryService.Resolve().SetCacheEntry(resourceType, null, resourceType, dict.Values.Select(d => toRepositoryResource(d, Services.ResourceManager.Shared.DomainObjects.RowStateEnum.Unchanged)).ToList());
+            //RepositoryService.Resolve().SetCacheEntry(resourceType, null, resourceType, dict.Values.Select(d => toRepositoryResource(d, Services.ResourceManager.Shared.DomainObjects.RowStateEnum.Unchanged)).ToList());
+            RepositoryService.Resolve().SetResource(resourceType, null, toRepositoryResource(item, Services.ResourceManager.Shared.DomainObjects.RowStateEnum.Unchanged), _namespace);
 
             if (!_pendingResourceUpdates.ContainsKey(resourceType))
                 _pendingResourceUpdates[resourceType] = new List<RepositoryDomainObjects.Resource>();
