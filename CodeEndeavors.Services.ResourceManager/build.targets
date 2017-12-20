@@ -54,6 +54,7 @@
              @(DllDependencies);" WorkingDirectory="$(TargetDir)\" Flatten="true" ZipFileName="$(RedistDir)\$(ProjectFullName).zip" Condition="$(Configuration) == 'Debug'"/>
       <Zip Files="
              $(ServiceDir)\$(ProjectFullName).dll;
+             $(TargetDir)\$(ProjectFullName).dll.config;
              @(DllDependencies);" WorkingDirectory="$(TargetDir)\" Flatten="true" ZipFileName="$(RedistDir)\$(ProjectFullName).zip" Condition="$(Configuration) != 'Debug'"/>
       <Unzip TargetDirectory="$(RedistDir)" ZipFileName="$(RedistDir)\$(ProjectFullName).zip" />
         <RemoveDir Directories="$(ServiceDir)" />
