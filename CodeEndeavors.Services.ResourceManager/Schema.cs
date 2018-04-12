@@ -101,6 +101,12 @@ namespace CodeEndeavors.Services.ResourceManager
                 {3, new List<string>()  //version 3 scripts
                 {
                     "IF EXISTS(SELECT * from syscolumns where name = 'Data' and xtype = 99 and id = (select id from sysobjects where name = 'Resource' and xtype = 'U')) BEGIN ALTER TABLE [dbo].[Resource] ALTER COLUMN [Data] NVARCHAR(MAX)  NULL; UPDATE [dbo].[Resource] SET [Data] = [Data]; END"
+                }},
+                {4, new List<string>()  //version 4 scripts
+                {
+                    "if not exists (SELECT 1 FROM sysobjects where name = 'ResourceLock') BEGIN CREATE TABLE ResourceLock(Source varchar(50) NOT NULL, Namespace varchar(50) NOT NULL, Timestamp datetimeoffset(7) NOT NULL) END",
+                    "if exists (select * from sysobjects where id = object_id(N'[ResourceLock_ObtainLock]') and OBJECTPROPERTY(id, N'IsProcedure') = 1) drop procedure ResourceLock_ObtainLock",
+                    "CREATE procedure ResourceLock_ObtainLock (@ns varchar(50),	@source varchar(50), @timeout_minutes INT = 2) as IF EXISTS (SELECT 1 FROM ResourceLock with (UPDLOCK) WHERE namespace = @ns) BEGIN IF exists (SELECT 1 FROM ResourceLock WHERE [Namespace] = @ns AND [Timestamp] < DATEADD(n, -1 * @timeout_minutes, getutcdate())) BEGIN UPDATE ResourceLock SET Source = @Source, Timestamp = getutcdate() WHERE [Namespace] = @ns END END ELSE BEGIN INSERT ResourceLock (Source, [Namespace], [Timestamp]) VALUES (@Source, @ns, getutcdate()) END SELECT Source, [Namespace], [Timestamp] FROM ResourceLock WHERE [Namespace] = @ns",
                 }}
             };
 

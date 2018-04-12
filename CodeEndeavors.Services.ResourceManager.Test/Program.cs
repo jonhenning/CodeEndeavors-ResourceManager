@@ -70,6 +70,11 @@ namespace CodeEndeavors.Services.ResourceManager.Test
                                 DoSaveResources(commandParts);
                                 break;
                             }
+                        case "obtainlock":
+                            {
+                                DoObtainLock(commandParts);
+                                break;
+                            }
                         default:
                             {
                                 recordMessage("Unknown Command");
@@ -110,6 +115,19 @@ namespace CodeEndeavors.Services.ResourceManager.Test
             var cr = RepositoryService.GetResources(resourceType, includeAudits);
             var crSave = RepositoryService.SaveResources(cr.Data);
             Console.WriteLine(crSave.Data.ToJson(true));
+        }
+
+        private static void DoObtainLock(string[] commandParts)
+        {
+            var source = Environment.MachineName;
+            var ns = "My Namespace";
+            if (commandParts.Length > 1)
+                source = commandParts[1];
+            if (commandParts.Length > 2)
+                ns = commandParts[2];
+
+            var cr = RepositoryService.ObtainLock(source, ns);
+            Console.WriteLine(cr.Data.ToJson(true));
         }
 
         private static void recordMessage(string message)

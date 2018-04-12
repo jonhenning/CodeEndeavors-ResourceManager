@@ -43,6 +43,12 @@ namespace CodeEndeavors.Services.ResourceManager.Controllers
             return RepositoryService.DeleteAll(arguments.GetSetting("resourceType", ""), arguments.GetSetting("type", ""), arguments.GetSetting("ns", ""));
         }
 
+        [HttpPost]
+        public ServiceResult<string> ObtainLock(string userId, [FromBody]Dictionary<string, object> arguments)
+        {
+            return RepositoryService.ObtainLock(arguments.GetSetting("source", ""), arguments.GetSetting("ns", ""));
+        }
+
         //[HttpPost]
         //public ServiceResult<bool> CustomerSave(string userId, [FromBody]DomainObjects.Resource customer)
         //{

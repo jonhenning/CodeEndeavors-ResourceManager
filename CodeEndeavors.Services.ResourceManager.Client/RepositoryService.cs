@@ -118,6 +118,14 @@ namespace CodeEndeavors.Services.ResourceManager.Client
             });
         }
 
+        public ClientCommandResult<string> ObtainLock(string source, string ns)
+        {
+            return ClientCommandResult<string>.Execute(result =>
+            {
+                result.ReportResult(_service.ObtainLock(source, ns), true);
+            });
+        }
+
         #region Common Client Methods
 
         [Obsolete]

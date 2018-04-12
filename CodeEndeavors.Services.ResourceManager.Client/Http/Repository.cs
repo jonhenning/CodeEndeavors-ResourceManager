@@ -39,5 +39,10 @@ namespace CodeEndeavors.Services.ResourceManager.Client.Http
             return base.GetHttpRequestObject<ServiceResult<bool>>(base.RequestUrl("ResourcesDeleteAll"), new { resourceType = resourceType, type = type, ns = ns });
         }
 
+        public ServiceResult<string> ObtainLock(string source, string ns)
+        {
+            return base.GetHttpRequestObject<ServiceResult<string>>(base.RequestUrl("ObtainLock"), new { source = source, ns = ns });
+        }
+
     }
 }

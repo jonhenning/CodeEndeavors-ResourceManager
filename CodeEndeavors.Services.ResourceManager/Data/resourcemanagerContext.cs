@@ -90,5 +90,18 @@ namespace CodeEndeavors.Services.ResourceManager.Data
 
         
         // Stored Procedures
+        public List<ResourceLock_ObtainLockReturnModel> ResourceLockObtainLock(string ns, string source, int? timeoutMinutes, out int procResult)
+        {
+            var nsParam = applyDBNull(new SqlParameter { ParameterName = "@ns", SqlDbType = SqlDbType.VarChar, Direction = ParameterDirection.Input, Value = ns, Size = 50 });
+            var sourceParam = applyDBNull(new SqlParameter { ParameterName = "@source", SqlDbType = SqlDbType.VarChar, Direction = ParameterDirection.Input, Value = source, Size = 50 });
+            var timeoutMinutesParam = applyDBNull(new SqlParameter { ParameterName = "@timeout_minutes", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = timeoutMinutes.HasValue ? (object)timeoutMinutes : DBNull.Value });
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+ 
+            var procResultData = Database.SqlQuery<ResourceLock_ObtainLockReturnModel>("EXEC @procResult = [dbo].[ResourceLock_ObtainLock] @ns, @source, @timeout_minutes", nsParam, sourceParam, timeoutMinutesParam, procResultParam).ToList();
+ 
+            procResult = (int) procResultParam.Value;
+            return procResultData;
+        }
+
     }
 }

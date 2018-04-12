@@ -118,5 +118,27 @@ namespace CodeEndeavors.Services.ResourceManager
                 }
             });
         }
+
+        public ServiceResult<string> ObtainLock(string source, string ns)
+        {
+            return this.ExecuteServiceResult<string>(result =>
+            {
+                using (new OperationTimer("ObtainLock: " + source + ", " + ns))
+                {
+                    using (var db = new Data.resourcemanagerContext(_connection))
+                    {
+                        db.Configuration.ProxyCreationEnabled = false;
+                        var procResult = 0;
+                        var data = db.ResourceLockObtainLock(ns, source, 2, out procResult);
+                        if (data.Count > 0)
+                            result.ReportResult(data[0].Source, true);
+                        else
+                            throw new Exception("Unable to obtain resource lock");
+                    }
+                }
+            });
+        }
+
+
     }
 }

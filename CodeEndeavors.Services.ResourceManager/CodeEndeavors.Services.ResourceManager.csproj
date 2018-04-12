@@ -103,6 +103,9 @@
       <DependentUpon>resourcemanager.tt</DependentUpon>
     </Compile>
     <Compile Include="Data\Mapping\ResourceMapExt.cs" />
+    <Compile Include="Data\ResourceLock_ObtainLockReturnModel.cs">
+      <DependentUpon>resourcemanager.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\resourcemanager.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

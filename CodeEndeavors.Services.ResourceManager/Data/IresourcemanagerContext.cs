@@ -32,6 +32,7 @@ namespace CodeEndeavors.Services.ResourceManager.Data
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         
         // Stored Procedures
+        List<ResourceLock_ObtainLockReturnModel> ResourceLockObtainLock(string ns, string source, int? timeoutMinutes, out int procResult);
     }
 
 }
