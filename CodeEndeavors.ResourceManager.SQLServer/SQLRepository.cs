@@ -223,6 +223,10 @@ namespace CodeEndeavors.ResourceManager.SQLServer
         {
             return source;
         }
+        public bool RemoveLock(string source, string ns)
+        {
+            return true;
+        }
 
         private string getResourceType<T>()
         {

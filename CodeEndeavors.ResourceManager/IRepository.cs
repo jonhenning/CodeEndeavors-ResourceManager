@@ -23,6 +23,7 @@ namespace CodeEndeavors.ResourceManager
         void DeleteAll<T>();
         void Save();
         string ObtainLock(string source, string ns);
+        bool RemoveLock(string source, string ns);
         void Dispose();
     }
 }

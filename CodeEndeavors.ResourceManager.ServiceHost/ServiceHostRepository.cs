@@ -222,6 +222,14 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
             else
                 throw new Exception(sr.ToString());
         }
+        public bool RemoveLock(string source, string ns)
+        {
+            var sr = RepositoryService.Resolve().RemoveLock(source, ns);
+            if (sr.Success)
+                return sr.Data;
+            else
+                throw new Exception(sr.ToString());
+        }
 
         private string getResourceType<T>()
         {

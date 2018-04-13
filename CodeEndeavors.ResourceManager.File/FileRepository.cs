@@ -173,6 +173,10 @@ namespace CodeEndeavors.ResourceManager.File
         {
             return source;
         }
+        public bool RemoveLock(string source, string ns)
+        {
+            return true;
+        }
 
         private string GetJsonFileName<T>()
         {
