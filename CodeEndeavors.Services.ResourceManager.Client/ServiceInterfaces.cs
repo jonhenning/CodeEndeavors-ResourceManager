@@ -14,6 +14,7 @@ namespace CodeEndeavors.Services.ResourceManager.Client
         ServiceResult<bool> SaveResources(List<DomainObjects.Resource> resources);
         ServiceResult<bool> DeleteAll(string resourceType, string type, string ns);
         ServiceResult<string> ObtainLock(string source, string ns);
+        ServiceResult<bool> RemoveLock(string source, string ns);
         void SetAquireUserIdDelegate(Func<string> func);
 
 

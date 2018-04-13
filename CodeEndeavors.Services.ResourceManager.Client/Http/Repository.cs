@@ -43,6 +43,10 @@ namespace CodeEndeavors.Services.ResourceManager.Client.Http
         {
             return base.GetHttpRequestObject<ServiceResult<string>>(base.RequestUrl("ObtainLock"), new { source = source, ns = ns });
         }
+        public ServiceResult<bool> RemoveLock(string source, string ns)
+        {
+            return base.GetHttpRequestObject<ServiceResult<bool>>(base.RequestUrl("RemoveLock"), new { source = source, ns = ns });
+        }
 
     }
 }

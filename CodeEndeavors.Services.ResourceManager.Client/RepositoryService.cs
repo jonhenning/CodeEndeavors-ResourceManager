@@ -126,6 +126,14 @@ namespace CodeEndeavors.Services.ResourceManager.Client
             });
         }
 
+        public ClientCommandResult<bool> RemoveLock(string source, string ns)
+        {
+            return ClientCommandResult<bool>.Execute(result =>
+            {
+                result.ReportResult(_service.RemoveLock(source, ns), true);
+            });
+        }
+
         #region Common Client Methods
 
         [Obsolete]

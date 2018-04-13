@@ -75,6 +75,11 @@ namespace CodeEndeavors.Services.ResourceManager.Test
                                 DoObtainLock(commandParts);
                                 break;
                             }
+                        case "removelock":
+                            {
+                                DoRemoveLock(commandParts);
+                                break;
+                            }
                         default:
                             {
                                 recordMessage("Unknown Command");
@@ -127,6 +132,18 @@ namespace CodeEndeavors.Services.ResourceManager.Test
                 ns = commandParts[2];
 
             var cr = RepositoryService.ObtainLock(source, ns);
+            Console.WriteLine(cr.Data.ToJson(true));
+        }
+        private static void DoRemoveLock(string[] commandParts)
+        {
+            var source = Environment.MachineName;
+            var ns = "My Namespace";
+            if (commandParts.Length > 1)
+                source = commandParts[1];
+            if (commandParts.Length > 2)
+                ns = commandParts[2];
+
+            var cr = RepositoryService.RemoveLock(source, ns);
             Console.WriteLine(cr.Data.ToJson(true));
         }
 

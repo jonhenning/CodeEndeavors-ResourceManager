@@ -103,5 +103,16 @@ namespace CodeEndeavors.Services.ResourceManager.Data
             return procResultData;
         }
 
+        public int ResourceLockRemoveLock(string ns, string source)
+        {
+            var nsParam = applyDBNull(new SqlParameter { ParameterName = "@ns", SqlDbType = SqlDbType.VarChar, Direction = ParameterDirection.Input, Value = ns, Size = 50 });
+            var sourceParam = applyDBNull(new SqlParameter { ParameterName = "@source", SqlDbType = SqlDbType.VarChar, Direction = ParameterDirection.Input, Value = source, Size = 50 });
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+ 
+            Database.ExecuteSqlCommand("EXEC @procResult = [dbo].[ResourceLock_RemoveLock] @ns, @source", nsParam, sourceParam, procResultParam);
+ 
+            return (int) procResultParam.Value;
+        }
+
     }
 }

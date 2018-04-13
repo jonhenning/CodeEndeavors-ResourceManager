@@ -48,6 +48,11 @@ namespace CodeEndeavors.Services.ResourceManager.Controllers
         {
             return RepositoryService.ObtainLock(arguments.GetSetting("source", ""), arguments.GetSetting("ns", ""));
         }
+        [HttpPost]
+        public ServiceResult<bool> RemoveLock(string userId, [FromBody]Dictionary<string, object> arguments)
+        {
+            return RepositoryService.RemoveLock(arguments.GetSetting("source", ""), arguments.GetSetting("ns", ""));
+        }
 
         //[HttpPost]
         //public ServiceResult<bool> CustomerSave(string userId, [FromBody]DomainObjects.Resource customer)

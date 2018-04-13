@@ -33,6 +33,7 @@ namespace CodeEndeavors.Services.ResourceManager.Data
         
         // Stored Procedures
         List<ResourceLock_ObtainLockReturnModel> ResourceLockObtainLock(string ns, string source, int? timeoutMinutes, out int procResult);
+        int ResourceLockRemoveLock(string ns, string source);
     }
 
 }

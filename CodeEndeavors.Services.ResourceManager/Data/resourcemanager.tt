@@ -2,7 +2,7 @@
 
 <#
     string[] IncludedTables = new[] {"Resource", "ResourceAudit"};
-    string[] IncludedProcs = new[] {"ResourceLock_ObtainLock"};
+    string[] IncludedProcs = new[] {"ResourceLock_ObtainLock", "ResourceLock_RemoveLock"};
 
     ConnectionStringName = "CodeEndeavors.Services.ResourceManager.Properties.Settings.resourcemanagerConnection";
     ElementsToGenerate = Elements.Context | Elements.UnitOfWork | Elements.StoredProcedures;

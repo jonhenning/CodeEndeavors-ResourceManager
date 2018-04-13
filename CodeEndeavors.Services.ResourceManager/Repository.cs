@@ -139,6 +139,22 @@ namespace CodeEndeavors.Services.ResourceManager
             });
         }
 
+        public ServiceResult<bool> RemoveLock(string source, string ns)
+        {
+            return this.ExecuteServiceResult<bool>(result =>
+            {
+                using (new OperationTimer("RemoveLock: " + source + ", " + ns))
+                {
+                    using (var db = new Data.resourcemanagerContext(_connection))
+                    {
+                        db.Configuration.ProxyCreationEnabled = false;
+                        db.ResourceLockRemoveLock(ns, source);
+                        result.ReportResult(true, true);
+                    }
+                }
+            });
+        }
+
 
     }
 }
