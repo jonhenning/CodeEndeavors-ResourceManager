@@ -219,6 +219,11 @@ namespace CodeEndeavors.ResourceManager.SQLServer
 
         }
 
+        public string ObtainLock(string source, string ns)
+        {
+            return source;
+        }
+
         private string getResourceType<T>()
         {
             return typeof(T).ToString();

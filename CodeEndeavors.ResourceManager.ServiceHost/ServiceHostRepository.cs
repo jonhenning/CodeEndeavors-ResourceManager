@@ -214,6 +214,15 @@ namespace CodeEndeavors.ResourceManager.ServiceHost
                 throw new Exception(sr.ToString());
         }
 
+        public string ObtainLock(string source, string ns)
+        {
+            var sr = RepositoryService.Resolve().ObtainLock(source, ns);
+            if (sr.Success)
+                return sr.Data;
+            else
+                throw new Exception(sr.ToString());
+        }
+
         private string getResourceType<T>()
         {
             return typeof(T).ToString();

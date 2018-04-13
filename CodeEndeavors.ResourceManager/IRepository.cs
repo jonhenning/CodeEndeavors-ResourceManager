@@ -22,6 +22,7 @@ namespace CodeEndeavors.ResourceManager
         void Delete<T>(DomainObjects.Resource<T> item);
         void DeleteAll<T>();
         void Save();
+        string ObtainLock(string source, string ns);
         void Dispose();
     }
 }

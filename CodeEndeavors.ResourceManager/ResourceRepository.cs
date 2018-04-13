@@ -217,6 +217,11 @@ namespace CodeEndeavors.ResourceManager
             return resource;
         }
 
+        public string ObtainLock(string source, string ns)
+        {
+            return _repository.ObtainLock(source, ns);
+        }
+
         public void Dispose()
         {
             _repository.Dispose();

@@ -169,6 +169,11 @@ namespace CodeEndeavors.ResourceManager.File
                 _pendingUpdates[resourceType] = () => WriteJsonFile<T>();
         }
 
+        public string ObtainLock(string source, string ns)
+        {
+            return source;
+        }
+
         private string GetJsonFileName<T>()
         {
             var fileName = typeof(T).ToString();
