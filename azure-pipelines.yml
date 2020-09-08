@@ -13,7 +13,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  PackageVersion: '2.0.$(Build.BuildID).0'
+  PackageVersion: '2.1.$(Build.BuildID).0'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -82,19 +82,19 @@ steps:
     versionEnvVar: 'PackageVersion'
     packDestination: '$(Build.SourcesDirectory)/redist'      
 
-# - task: NuGetCommand@2
-#   displayName: 'NuGet push'
-#   inputs:
-#     command: 'push'
-#     packagesToPush: '$(Build.SourcesDirectory)/redist/*.nupkg'
-#     nuGetFeedType: 'internal'
-#     publishVstsFeed: 'ac758a19-2517-4b8d-9d83-43bd02106e50'
-#     allowPackageConflicts: false
-
 - task: NuGetCommand@2
+  displayName: 'NuGet push'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.SourcesDirectory)/redist/*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'Nuget.org'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'ac758a19-2517-4b8d-9d83-43bd02106e50'
+    allowPackageConflicts: false
+
+# - task: NuGetCommand@2
+#   inputs:
+#     command: 'push'
+#     packagesToPush: '$(Build.SourcesDirectory)/redist/*.nupkg'
+#     nuGetFeedType: 'external'
+#     publishFeedCredentials: 'Nuget.org'
 

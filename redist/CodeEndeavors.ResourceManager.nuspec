@@ -13,7 +13,7 @@
         <releaseNotes />
         <dependencies>
             <group>
-                <dependency id="CodeEndeavors.Extensions" version="2.0.9" />
+                <dependency id="CodeEndeavors.Extensions" version="2.1.62" />
                 <dependency id="CodeEndeavors.Distributed.Cache.Client" version="1.0.17" />
             </group>
         </dependencies>

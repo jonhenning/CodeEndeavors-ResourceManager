@@ -1,38 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29609.76
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager", "CodeEndeavors.ResourceManager\CodeEndeavors.ResourceManager.csproj", "{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.Test", "CodeEndeavors.ResourceManager.Test\CodeEndeavors.ResourceManager.Test.csproj", "{AFD4F062-2551-4065-940F-F9050A25F431}"
-	ProjectSection(ProjectDependencies) = postProject
-		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7} = {581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}
-		{77BE6536-59B7-44B9-8257-33212500D01D} = {77BE6536-59B7-44B9-8257-33212500D01D}
-		{EB00AC97-E5CB-4181-AA04-7ADE2A5AD5A3} = {EB00AC97-E5CB-4181-AA04-7ADE2A5AD5A3}
-		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
-		{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2} = {BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.Shared", "CodeEndeavors.ResourceManager.Shared\CodeEndeavors.ResourceManager.Shared.csproj", "{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.UnitTest", "CodeEndeavors.ResourceManager.UnitTest\CodeEndeavors.ResourceManager.UnitTest.csproj", "{0D913ACF-FE89-4868-8D97-CE457E7AC46D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7} = {581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}
-		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.File", "CodeEndeavors.ResourceManager.File\CodeEndeavors.ResourceManager.File.csproj", "{77BE6536-59B7-44B9-8257-33212500D01D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7} = {581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}
 		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49} = {9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D6DEA669-5E99-43CE-A7F4-4A28821BDED4}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.ResourceManager.SQLServer", "CodeEndeavors.ResourceManager.SQLServer\CodeEndeavors.ResourceManager.SQLServer.csproj", "{BA9625D8-C7F0-4A2F-81CE-98662F7D5BC2}"
@@ -67,16 +45,6 @@ Global
 		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9E774DC3-CA28-49D1-B2CB-BEE671D2BE49}.Release|x86.ActiveCfg = Release|Any CPU
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Debug|x86.ActiveCfg = Debug|x86
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Debug|x86.Build.0 = Debug|x86
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Release|Any CPU.ActiveCfg = Release|x86
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Release|Mixed Platforms.Build.0 = Release|x86
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Release|x86.ActiveCfg = Release|x86
-		{AFD4F062-2551-4065-940F-F9050A25F431}.Release|x86.Build.0 = Release|x86
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -87,15 +55,6 @@ Global
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{581AEE2E-7F0F-4296-AB8C-6D089F68E8B7}.Release|x86.ActiveCfg = Release|Any CPU
-		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{0D913ACF-FE89-4868-8D97-CE457E7AC46D}.Release|x86.ActiveCfg = Release|Any CPU
 		{77BE6536-59B7-44B9-8257-33212500D01D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{77BE6536-59B7-44B9-8257-33212500D01D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77BE6536-59B7-44B9-8257-33212500D01D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -129,6 +88,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {12F06DCF-A98C-44AC-BAC2-3F1C4AF3B5EF}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CodeEndeavors.ResourceManager.vsmdi
