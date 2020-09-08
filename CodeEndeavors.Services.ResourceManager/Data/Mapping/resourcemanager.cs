@@ -14,27 +14,9 @@
 //     Connection String Name: "CodeEndeavors.Services.ResourceManager.Properties.Settings.resourcemanagerConnection"
 //     Connection String:      "Data Source=(local);Initial Catalog=Videre.ResourceManager;Persist Security Info=True;User ID=resourcemanager;Password=password"
 
+
+// -----------------------------------------------------------------------------------------
+// Failed to read database schema - A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
+// -----------------------------------------------------------------------------------------
+
 // LoadStoredProcs-----------------------
-// ReSharper disable RedundantUsingDirective
-// ReSharper disable DoNotCallOverridableMethodsInConstructor
-// ReSharper disable InconsistentNaming
-// ReSharper disable PartialTypeWithSinglePart
-// ReSharper disable PartialMethodWithSinglePart
-// ReSharper disable RedundantNameQualifier
-// TargetFrameworkVersion = 4.51
-#pragma warning disable 1591    //  Ignore "Missing XML Comment" warning
-
-using System;
-using System.Collections.Generic;
-using System.CodeDom.Compiler;
-using System.Data.Entity.ModelConfiguration;
-using CodeEndeavors.Services.ResourceManager.Shared.DomainObjects;
-using CodeEndeavors.Services.ResourceManager.Data;
-using System.Threading;
-using System.Threading.Tasks;
-using DatabaseGeneratedOption = System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption;
-
-namespace CodeEndeavors.Services.ResourceManager.Data.Mapping
-{
-}
-

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29609.76
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.Services.ResourceManager.Shared", "CodeEndeavors.Services.ResourceManager.Shared\CodeEndeavors.Services.ResourceManager.Shared.csproj", "{F318BBA2-2EE0-4BD1-A0A1-421074FE7865}"
 EndProject
@@ -14,13 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEndeavors.Services.Reso
 		{3EFDB665-2A21-4790-981D-7702B1EA9D56} = {3EFDB665-2A21-4790-981D-7702B1EA9D56}
 		{F318BBA2-2EE0-4BD1-A0A1-421074FE7865} = {F318BBA2-2EE0-4BD1-A0A1-421074FE7865}
 		{679371A5-D2B0-49FC-84F1-8B1CB4B45382} = {679371A5-D2B0-49FC-84F1-8B1CB4B45382}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7D4310B5-4677-4A5C-AC15-F2E6D5DDCBFD}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Global
@@ -48,5 +41,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {32FC6E71-EDC1-4299-A769-8E67192C1B6E}
 	EndGlobalSection
 EndGlobal
