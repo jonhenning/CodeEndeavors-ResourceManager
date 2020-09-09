@@ -9,8 +9,8 @@
     <CommonBinDir>$(CommonLibDir)</CommonBinDir>
     <MSBuildTargetsDir>$(CommonBinDir)\MSBuildTargets</MSBuildTargetsDir>
     <InternalizedDlls>CodeEndeavors.ResourceManager.Shared.dll</InternalizedDlls>
-    <ILMergeTargetPlatform>/targetplatform:v4,"%ProgramFiles(x86)%\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client"</ILMergeTargetPlatform>
-    <DeployDir></DeployDir>
+    <ILMergeTargetPlatform>/targetplatform:v4,"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8"</ILMergeTargetPlatform>
+    <DeployDir>C:\dev\videre\OpenSource\videre\Web\_updates</DeployDir>
   </PropertyGroup>
 
   <!-- Import to use Common Targets\Tasks -->
@@ -21,7 +21,6 @@
   </Target>
 
   <Target Name="MergeDlls" Condition="$(InternalizedDlls) != ''">
-    <!--<Exec Command="&quot;$(CommonBinDir)\ILMerge.exe&quot; /internalize:&quot;$(MSBuildProjectDirectory)\internalizeexclude.regex&quot; /log /out:&quot;$(RedistDir)\CodeEndeavors.ResourceManager.dll&quot; CodeEndeavors.ResourceManager.dll $(InternalizedDlls)" WorkingDirectory="$(TargetDir)" />-->
     <Exec Command="&quot;$(CommonBinDir)\ILMerge.exe&quot; /log $(ILMergeTargetPlatform) /out:&quot;$(RedistDir)\CodeEndeavors.ResourceManager.dll&quot; CodeEndeavors.ResourceManager.dll $(InternalizedDlls)" WorkingDirectory="$(TargetDir)" />
   </Target>
 

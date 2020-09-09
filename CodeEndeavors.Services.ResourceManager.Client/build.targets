@@ -16,9 +16,7 @@
     <ClientDir>$(RootDir)\client</ClientDir>
     <DeployDir>$(RootDir)\..\</DeployDir>
     <ServiceHostBin>..\..\..\..\Services\ServiceHost\bin</ServiceHostBin>
-    <ProgramFiles32 Condition="Exists('$(PROGRAMFILES) (x86)')">$(PROGRAMFILES) (x86)</ProgramFiles32>
-    <ProgramFiles32 Condition="$(ProgramFiles32) == ''">$(PROGRAMFILES)</ProgramFiles32>
-    <ILMergeTargetPlatform>/targetplatform:v4,"$(PROGRAMFILES)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5"</ILMergeTargetPlatform>
+    <ILMergeTargetPlatform>/targetplatform:v4,"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8"</ILMergeTargetPlatform>
   </PropertyGroup>
   <ItemGroup>
     <ServiceHostBins Include="$(ServiceHostBin)" />
