@@ -65,7 +65,6 @@
     <Compile Include="ServiceHostRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="build.targets">
       <SubType>Designer</SubType>
     </None>
