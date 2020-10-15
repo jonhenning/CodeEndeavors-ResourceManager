@@ -32,24 +32,44 @@ namespace CodeEndeavors.Services.ResourceManager.Data
             Database.SetInitializer<resourcemanagerContext>(null);
         }
 
+        private System.Text.StringBuilder _timingText = new System.Text.StringBuilder();
+        private CodeEndeavors.ServiceHost.Common.Services.Profiler.IServiceHostProfilerCapture _capture = null;
+
         public resourcemanagerContext()
             : base("Name=CodeEndeavors.Services.ResourceManager.Properties.Settings.resourcemanagerConnection")
         {
             InitializePartial();
+			setupProfiling();
         }
 
         public resourcemanagerContext(string connectionString) : base(connectionString)
         {
             InitializePartial();
+			setupProfiling();
         }
 
         public resourcemanagerContext(string connectionString, System.Data.Entity.Infrastructure.DbCompiledModel model) : base(connectionString, model)
         {
             InitializePartial();
+			setupProfiling();
         }
+
+		private void setupProfiling()
+		{
+            _capture = CodeEndeavors.ServiceHost.Common.Services.Profiler.Timeline.Capture("DbContext Lifespan");
+            this.Database.Log = s =>
+            {
+                _timingText.AppendLine(s);
+            };
+		}
 
         protected override void Dispose(bool disposing)
         {
+            if (_timingText.Length > 0)
+            {
+                using (var custom = _capture?.CustomTiming("LOGGING ALL COMMANDS", _timingText.ToString())) { };
+            }
+			_capture?.Dispose();
             base.Dispose(disposing);
         }
 
