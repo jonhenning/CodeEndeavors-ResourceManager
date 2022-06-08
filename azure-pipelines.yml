@@ -3,8 +3,8 @@
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
-trigger:
-- master
+
+name: 2.1.$(Rev:r)
 
 pool:
   vmImage: 'windows-latest'
@@ -13,7 +13,6 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  PackageVersion: '2.1.$(Build.BuildID).0'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -35,9 +34,9 @@ steps:
     Title: 'Code Endeavors Resource Manager'
     Description: 'Code Endeavors Resource Manager'
     Company: 'Code Endeavors, Inc.'
-    VersionNumber: '$(PackageVersion)'
-    FileVersionNumber: '$(PackageVersion)'
-    InformationalVersion: '$(PackageVersion)'
+    VersionNumber: '$(Build.BuildNumber)'
+    FileVersionNumber: '$(Build.BuildNumber)'
+    InformationalVersion: '$(Build.BuildNumber)'
     LogLevel: 'verbose'
     FailOnWarning: false
 
@@ -49,40 +48,35 @@ steps:
   inputs:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/redist/CodeEndeavors.ResourceManager.File.nuspec'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'PackageVersion'
+    versioningScheme: byBuildNumber
     packDestination: '$(Build.SourcesDirectory)/redist'
 
 - task: NuGetCommand@2
   inputs:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/redist/CodeEndeavors.ResourceManager.ServiceHost.nuspec'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'PackageVersion'
+    versioningScheme: byBuildNumber
     packDestination: '$(Build.SourcesDirectory)/redist'
 
 - task: NuGetCommand@2
   inputs:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/redist/CodeEndeavors.ResourceManager.SQLServer.nuspec'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'PackageVersion'
+    versioningScheme: byBuildNumber
     packDestination: '$(Build.SourcesDirectory)/redist'
 
 - task: NuGetCommand@2
   inputs:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/redist/CodeEndeavors.Services.ResourceManager.ClientX.nuspec'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'PackageVersion'
+    versioningScheme: byBuildNumber
     packDestination: '$(Build.SourcesDirectory)/redist'    
 
 - task: NuGetCommand@2
   inputs:
     command: pack
     packagesToPack: '$(Build.SourcesDirectory)/redist/CodeEndeavors.ResourceManager.nuspec'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'PackageVersion'
+    versioningScheme: byBuildNumber
     packDestination: '$(Build.SourcesDirectory)/redist'      
 
 - task: NuGetCommand@2
