@@ -1,6 +1,7 @@
 ﻿using CodeEndeavors.Extensions;
 using CodeEndeavors.ServiceHost.Common.Client;
 using CodeEndeavors.ServiceHost.Common.Services;
+using CodeEndeavors.ServiceHost.Common.Services.Profiler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,24 +50,39 @@ namespace CodeEndeavors.Services.ResourceManager.Client
             {
                 return ClientCommandResult<TData>.Execute(result =>
                 {
-                    var serviceCalled = false;
-                    var serviceResult = CacheService.GetCacheEntry(cacheName, cacheKey, ToMD5(cacheItemObject.ToJson()), () =>
+                    using (var capture = Timeline.Capture("ResourceManager.Client.Cache.Execute"))
                     {
-                        serviceCalled = true;
-                        var sr = codeFunc.Invoke();
-                        if (sr.Success)
-                            return sr.Data;
+                        var serviceCalled = false;
+                        string profilerResults = null;
+                        var serviceResult = CacheService.GetCacheEntry(cacheName, cacheKey, ToMD5(cacheItemObject.ToJson()), () =>
+                        {
+                            serviceCalled = true;
+                            var sr = codeFunc.Invoke();
+                            if (sr.Success)
+                            {
+                                profilerResults = sr.ProfilerResults;
+                                return sr.Data;
+                            }
+                            else
+                                throw new Exception(sr.ToString());
+                        });
+                        if (serviceCalled)
+                        {
+                            result.ProfilerResults = profilerResults;
+                            result.ReportResult(serviceResult, true);
+                        }
                         else
-                            throw new Exception(sr.ToString());
-                    });
-                    if (serviceCalled)
-                        result.ReportResult(serviceResult, true);
-                    else
-                        result.ReportResult(serviceResult, true);
+                            result.ReportResult(serviceResult, true);
+                    }
                 });
             }
             else
-                return ClientCommandResult<TData>.Execute(codeFunc);
+            {
+                using (var capture = Timeline.Capture("ResourceManager.Client.Cache.Execute (nocache)"))
+                {
+                    return ClientCommandResult<TData>.Execute(codeFunc);
+                }
+            }
         }
 
         public static ClientCommandResult<TData> Execute<TData>(string cacheName, string cacheTypeDependency, List<string> cacheTypeDependencyKeys, string cacheKey, object cacheItemObject, Func<ServiceResult<TData>> codeFunc)
@@ -82,27 +98,35 @@ namespace CodeEndeavors.Services.ResourceManager.Client
             {
                 return ClientCommandResult<TData>.Execute(result =>
                 {
-                    var serviceCalled = false;
-                    var serviceResult = CacheService.GetCacheEntry(cacheName, absoluteExpiration, cacheKey, ToMD5(cacheItemObject.ToJson()), () =>
+                    using (var capture = Timeline.Capture("ResourceManager.Client.Cache.Execute w/ deps"))
                     {
-                        serviceCalled = true;
-                        var sr = codeFunc.Invoke();
-                        if (sr.Success)
-                            return sr.Data;
-                        else
-                            throw new Exception(sr.ToString());
-                    });
-                    if (serviceCalled)
-                    {
-                        if (cacheTypeDependencyKeys != null)
+                        var serviceCalled = false;
+                        string profilerResults = null;
+                        var serviceResult = CacheService.GetCacheEntry(cacheName, absoluteExpiration, cacheKey, ToMD5(cacheItemObject.ToJson()), () =>
                         {
-                            foreach (var key in cacheTypeDependencyKeys)
-                                CacheService.AddCacheDependency(cacheName, cacheTypeDependency, key, cacheKey); //dependencies have no expiration (unless specified on connection)
+                            serviceCalled = true;
+                            var sr = codeFunc.Invoke();
+                            if (sr.Success)
+                            {
+                                profilerResults = sr.ProfilerResults;
+                                return sr.Data;
+                            }
+                            else
+                                throw new Exception(sr.ToString());
+                        });
+                        if (serviceCalled)
+                        {
+                            if (cacheTypeDependencyKeys != null)
+                            {
+                                foreach (var key in cacheTypeDependencyKeys)
+                                    CacheService.AddCacheDependency(cacheName, cacheTypeDependency, key, cacheKey); //dependencies have no expiration (unless specified on connection)
+                            }
+                            result.ProfilerResults = profilerResults;
+                            result.ReportResult(serviceResult, true);
                         }
-                        result.ReportResult(serviceResult, true);
+                        else
+                            result.ReportResult(serviceResult, true);
                     }
-                    else
-                        result.ReportResult(serviceResult, true);
                 });
             }
             else
