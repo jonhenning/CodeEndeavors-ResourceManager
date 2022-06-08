@@ -61,7 +61,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="internalizeexclude.regex" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeEndeavors.ResourceManager.Shared\CodeEndeavors.ResourceManager.Shared.csproj">
